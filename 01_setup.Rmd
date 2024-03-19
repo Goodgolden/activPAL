@@ -49,7 +49,7 @@ install_version("magrittr",
                 upgrade = "never",
                 dependencies = TRUE)
 install_version("methods", 
-                version = "4.2.3",
+                version = "4.2.2",
                 upgrade = "never",
                 dependencies = TRUE)
 install_version("png",

@@ -36,5 +36,3 @@ Suggests:
     rmarkdown
 VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)
-Depends: 
-    R (>= 4.1)

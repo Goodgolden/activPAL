@@ -19,10 +19,12 @@ Now load the devtools and install activPAL_v0.3.0
 ```{r}
 install.packages("devtools", dependencies = TRUE)
 library(devtools)
-devtools::install_github("Goodgolden/activPAL_v0.3.0")
+devtools::install_github("Goodgolden/activPAL_v0.3.0", 
+                         dependencies = TRUE,
+                         force = TRUE)
 ## Here are the original repositiory for activPAL
 ## install_github("PALkitchen/activPAL")
-
+?install_github
 
 install_version("devtools",
                 version = "2.4.5",

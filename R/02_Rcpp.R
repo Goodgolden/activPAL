@@ -422,7 +422,7 @@ apSummary <- function(Events_Files_To_Process_folder_location, Confirmed_Output_
 activity.with.overlay.chart.folder_drive <-
   function(index_file_location, output_folder) {
 
-    browser()
+    # browser()
     if (!valid.file.path(index_file_location)) {
       stop("A valid file name for index_file_location has not been provided.")
     }
@@ -479,7 +479,7 @@ activity.with.overlay.chart.folder_drive <-
 
 activity.with.overlay.chart_drive <-
   function(events_file, overlay_file, output_folder) {
-    browser()
+    # browser()
 
     if (!valid.file.path(events_file)) {
       stop("The location of the required input file has not been provided / does not exist.")

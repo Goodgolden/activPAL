@@ -5,6 +5,16 @@ load.step.times <-
     return(step_times)
   }
 
+#' Title pre.process.events.file
+#'
+#' @param file_name
+#' @param folder
+#' @param minimum_valid_wear
+#'
+#' @return
+#' @export
+#'
+#' @examples
 pre.process.events.file <-
   function(file_name,folder = "", minimum_valid_wear = 20){
     events_file <- load.events.file(folder,file_name)
@@ -12,8 +22,13 @@ pre.process.events.file <-
     return(events_file)
   }
 
-load.events.file <-
-  function(folder,file_name){
+#' Title load.events.file
+#'
+#' @param folder
+#' @param file_name
+#'
+#' @return
+load.events.file <- function(folder,file_name){
     # Load cell A1 to test if the events file contains a header
     events_file <- read.csv(paste(folder,file_name,sep=""), nrows=1, header = FALSE)
     if(events_file[1,1] == "**header**"){
@@ -51,8 +66,14 @@ load.events.file <-
     return(events_file)
   }
 
-activpal.file.process<-
-  function(data, valid.days = NULL,wear.time.minimum = 72000){
+#' Title activpal.file.process
+#'
+#' @param data
+#' @param valid.days
+#' @param wear.time.minimum
+#'
+#' @return
+activpal.file.process <- function(data, valid.days = NULL,wear.time.minimum = 72000){
     # takes in an unprocessed activpal file, formatting and processing the file to allow further analysis
     # data = an unprocessed activpal event file
     # wear.time.minimum = minimum wear time required for a day to be considered valid
@@ -79,8 +100,15 @@ activpal.file.process<-
     return(process.data)
   }
 
-activpal.convert.events.extended.file <-
-  function(data){
+
+
+
+#' Title activpal.convert.events.extended.file
+#'
+#' @param data
+#'
+#' @return
+activpal.convert.events.extended.file <- function(data){
     if(length(which(colnames(data) == "Time.approx.")) >= 1){
       if(rownames(data)[1] != 1){
         data$time <- as.numeric(rownames(data))
@@ -95,8 +123,16 @@ activpal.convert.events.extended.file <-
     }
   }
 
-activpal.file.process.rename.row<-
-  function(data){
+
+#' Title activpal.file.process.rename.row
+#'
+#' @param data
+#'
+#' @return
+#' @export
+#'
+#' @examples
+activpal.file.process.rename.row <- function(data){
     # Renames the initial row names of an imported activpal event file to facilitate easier processing
     # data = an unprocessed activpal event file
     process.data<-data

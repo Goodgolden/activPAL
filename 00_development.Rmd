@@ -19,8 +19,6 @@ library(testthat)
 library(usethis)
 library(devtools)
 
-load_all()
-
 # ?testthat::test_file
 # ?devtools::test
 # path <- testthat_example("success")
@@ -33,6 +31,7 @@ here::set_here()
 ```
 
 ```{r}
+load_all()
 ## check the package version activPAL
 packageVersion("activPAL")
 

@@ -38,7 +38,7 @@ list.files(Events_Files_To_Process_folder_location)
 
 For Windows users, the following code should be used to set the folder locations.
 
-```{r "windows"}
+```{r "windows", eval=FALSE, include=FALSE}
 Events_Files_To_Process_folder_location <-
   "S:\\PT\\IMSLAB\\IMSL RESEARCH PROJECTS\\SPARX III\\SPARX III CORE\\SPARX DATA ANALYSIS\\SPARX ACTIVPAL PROCESSING\\AP_Processing_Directory\\Events_Files_To_Process\\"
 
@@ -54,7 +54,7 @@ Confirmed_Output_folder_location <-
 You should be able to see the some files listed in the folder; 
 otherwise, you may need to adjust the folder location.
 
-```{r}
+```{r eval=FALSE, include=FALSE}
 list.files(Events_Files_To_Process_folder_location)
 # list.files(Temp_Output_folder_location)
 # list.files(Confirmed_Output_folder_location)
@@ -63,18 +63,18 @@ list.files(Events_Files_To_Process_folder_location)
 ## Run the code
 
 ```{r "run_code"}
-activpal.process.folder(Events_Files_To_Process_folder_location,
+activpal.process.folder.macbook(Events_Files_To_Process_folder_location,
                         Temp_Output_folder_location)
 
-Last_Batched_Ids <- activpal.process.folder(Events_Files_To_Process_folder_location,
+Last_Batched_Ids <- activpal.process.folder.macbook(Events_Files_To_Process_folder_location,
                                             Temp_Output_folder_location)
 
-prepare.ex.times(Temp_Output_folder_location)
+prepare.ex.times.macbook(Temp_Output_folder_location)
 
-make.index.file(Events_Files_To_Process_folder_location,
+make.index.file.macbook(Events_Files_To_Process_folder_location,
                 Temp_Output_folder_location)
 
-individual.chart.overlay(Temp_Output_folder_location)
+individual.chart.overlay.macbook(Temp_Output_folder_location)
 ```
 
 

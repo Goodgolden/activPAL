@@ -116,8 +116,7 @@ activity.with.overlay.chart <-
 
   }
 
-activity.with.overlay.single.chart<-
-  function(activpal.data,overlay.data,file.name,out.path,match="both"){
+activity.with.overlay.single.chart<-  function(activpal.data,overlay.data,file.name,out.path,match="both"){
     #' @importFrom grDevices gray palette
     #' @importFrom stats quantile
 
@@ -403,9 +402,7 @@ split.overlay<-
     return(data)
   }
 
-process.overlay.file <-
-  #' @importFrom  methods is
-  function(data){
+process.overlay.file <-  function(data){
     if (nrow(data)==0){
       return (NULL)
     }

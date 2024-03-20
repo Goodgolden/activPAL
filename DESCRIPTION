@@ -28,7 +28,7 @@ Imports:
     png,
     methods,
     devtools (>= 2.4.5),
-    Rcpp
+    Rcpp (>= 1.0.10)
 RoxygenNote: 7.2.3
 Suggests: 
     testthat,
@@ -36,3 +36,5 @@ Suggests:
     rmarkdown
 VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)
+Depends: 
+    R (>= 4.1)

@@ -36,10 +36,10 @@ install_version("ggplot2",
 # install_version("gridExtra",
 #                 version = "2.3",
 #                 dependencies = TRUE)
-install_version("lubridate",
-                version = "1.9.2",
-                # upgrade = "never",
-                dependencies = TRUE)
+# install_version("lubridate",
+#                 version = "1.9.2",
+#                 # upgrade = "never",
+#                 dependencies = TRUE)
 # install_version("magrittr",
 #                 version = "2.0.3",
 #                 # upgrade = "never",
@@ -71,8 +71,6 @@ install_version("lubridate",
 library(devtools)
 library(Rcpp)
 library(dplyr)
-
-load_all
 
 devtools::install_github("Goodgolden/activPAL_v0.3.0", 
                          dependencies = TRUE,

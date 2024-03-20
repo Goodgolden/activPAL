@@ -8,8 +8,8 @@ EventsExended classified waking day / time in bed}
 \usage{
 generate.physical.behaviour.summary(
   input_folder,
-  period_file = NULL,
-  chart_title = NULL,
+  slice_file = NULL,
+  chart_title,
   output_folder = "",
   prefix_delimiter = NULL,
   prefix_length = NULL,
@@ -18,34 +18,37 @@ generate.physical.behaviour.summary(
   anonymise = FALSE,
   generate_chart = TRUE,
   standard_scales = FALSE,
-  sort_order = "MEDIAN_DAILY_STEP_COUNT"
+  sort_order = "MEDIAN_DAILY_STEP_COUNT",
+  period_file = NULL
 )
 }
 \arguments{
 \item{input_folder}{The folder where the events files (format *EventsEx.csv)
 and optional rise time files (format *RiseSitData.csv) to be processed are saved.}
 
-\item{period_file}{The location of a csv files containing the details of custom periods to
-    to be used when analysing the supplied events files.
+\item{slice_file}{The location of a csv files containing the details of custom time slices to
+to be used when analysing the supplied events files.
 
-    If the location of a valid file is supplied the csv file with the suffix "_Custom_Summary"
-    will be generated containing the outcomes using the supplied periods.
+\if{html}{\out{<div class="sourceCode">}}\preformatted{If the location of a valid file is supplied the csv file with the suffix "_Custom_Summary"
+will be generated containing the outcomes using the supplied periods.
 
-    Each row defines a single observation for a single events file. The following columns
-    must be in the spreadsheet.
+An additional validation will be carried out to check the events that span the boundaries
+of one or more slice are correctly processed (both in terms of correctly calculating the
+duration of the event occurring within the slice and that events are not double counted
+across multiple slices). A file with the suffix "_Events_Validation" will be generated
+that reports the number of events occurring in each file, the number of events counted within
+the specified slices and if the event processing generated a valid output.
 
-    filename - an identifier for the events file that the period is for.  This should be
-    the same as the identifier generated using the prefix_delimiter and prefix_length parameters
-
-    startime - the starting time of the period
-
-    endtime - the ending time of the period
-
-    The function will attempt to parse the supplied times in the following order
-    "YYYY-mm-dd HH:MM", "YYYY-mm-dd HH:MM:SS", "YYYY-dd-mm HH:MM", "YYYY-dd-mm HH:MM:SS",
-    "dd/mm/YYYY HH:MM", "dd/mm/YYYY HH:MM:SS", "mm/dd/YYYY HH:MM", "mm/dd/YYYY HH:MM:SS"
-
-    category - an idenfitier for the observation period (i.e. working day or time in bed)}
+Each row defines a single observation for a single events file. The following columns
+must be in the spreadsheet.
+filename = an identifier for the events file that the slice is for.  This should be
+the same as the identifier generated using the prefix_delimiter and prefix_length parameters
+startime = the starting time of the slice
+endtime = the ending time of the slice
+The function will attempt to parse the supplied times in the following order
+"YYYY-mm-dd HH:MM", "YYYY-mm-dd HH:MM:SS", "YYYY-dd-mm HH:MM", "YYYY-dd-mm HH:MM:SS",
+"dd/mm/YYYY HH:MM", "dd/mm/YYYY HH:MM:SS", "mm/dd/YYYY HH:MM", "mm/dd/YYYY HH:MM:SS"
+}\if{html}{\out{</div>}}}
 
 \item{chart_title}{Character string; the file identifier for the generated PDF file.}
 
@@ -83,33 +86,34 @@ By default, files are sorted by decreasing mean daily sedentary time.}
 }
 \description{
 activity.summary.window processes all the extended events files (format *EventsEx.csv)
-    in a folder and produces a chart showing a number of summary physical behaviour outcomes for
-    the files. The outcomes are grouped into three groups:
-    \itemize{
-    \item Mean daily time in different posture classes (time in bed, sedentary, upright and stepping)
-    \item Volume based measures of activity participation (step count, stepping duration and intensity,
-       time spent in different travel associated activities)
-    \item Measures of physical ability (time to first step, maximum step count, median cadence of
-       stepping bouts containing short (< 1 minute) and long (> 1 minute) periods of stepping)
-    }
-    If matching rise time files (format *RiseSitData.csv) are included in the folder an additional
-    column will be inserted to show the median rise time.
+in a folder and produces a chart showing a number of summary physical behaviour outcomes for
+the files. The outcomes are grouped into three groups:
+\itemize{
+\item Mean daily time in different posture classes (time in bed, sedentary, upright and stepping)
+\item Volume based measures of activity participation (step count, stepping duration and intensity,
+time spent in different travel associated activities)
+\item Measures of physical ability (time to first step, maximum step count, median cadence of
+stepping bouts containing short (< 1 minute) and long (> 1 minute) periods of stepping)
+}
+If matching rise time files (format *RiseSitData.csv) are included in the folder an additional
+column will be inserted to show the median rise time. \c
 
-    If the function is unable to process one or more of the extended events files, an additional
-    file (yyMMMdd_HHMM_FileErrorList.csv) will be generated with a list of the extended events
-    files that were not processed and details of the error that prevented the file from being
-    processed. Extended events files modified in Microsoft Excel may fail to process.
+\if{html}{\out{<div class="sourceCode">}}\preformatted{If the function is unable to process one or more of the extended events files, an additional
+file (yyMMMdd_HHMM_FileErrorList.csv) will be generated with a list of the extended events
+files that were not processed and details of the error that prevented the file from being
+processed. Extended events files modified in Microsoft Excel may fail to process.
 
-    The error message \strong{The Events Extended file had an unexpected format and could not be processed}
-    indicates the file may have been altered. For these files, Re-exporting the Events Extended
-    file from PAL Analysis / PAL Batch may rectify the issue preventing the file from being
-    processed.
+The error message \\strong\{The Events Extended file had an unexpected format and could not be processed\}
+indicates the file may have been altered. For these files, Re-exporting the Events Extended
+file from PAL Analysis / PAL Batch may rectify the issue preventing the file from being
+processed.
+}\if{html}{\out{</div>}}
 }
 \details{
 The following outcomes can be used to sort observations in the chart
-    SEDENTARY_TIME, TIME_IN_BED, UPRIGHT_TIME, STEPPING_TIME,
-    DAILY_SEDENTARY_BOUTS, DAILY_TIB_INTERRUPTIONS, STEPPING_BOUTS_UNDER_1_MIN,
-    PEAK_2_MIN_STEPPING, PEAK_6_MIN_STEPPING, PEAK_12_MIN_STEPPING,
-    DAILY_PEAK_30_SECOND_STEPPING, MEDIAN_DAILY_STEP_COUNT, MEDIAN_RISE_TIME,
-    MEDIAN_CADENCE_TO_1_MINUTE , MEDIAN_CADENCE_1_MINUTE_PLUS, STEPPING_INTENSITY
+SEDENTARY_TIME, TIME_IN_BED, UPRIGHT_TIME, STEPPING_TIME,
+DAILY_SEDENTARY_BOUTS, DAILY_TIB_INTERRUPTIONS, STEPPING_BOUTS_UNDER_1_MIN,
+PEAK_2_MIN_STEPPING, PEAK_6_MIN_STEPPING, PEAK_12_MIN_STEPPING,
+DAILY_PEAK_30_SECOND_STEPPING, MEDIAN_DAILY_STEP_COUNT, MEDIAN_RISE_TIME,
+MEDIAN_CADENCE_TO_1_MINUTE , MEDIAN_CADENCE_1_MINUTE_PLUS, STEPPING_INTENSITY
 }

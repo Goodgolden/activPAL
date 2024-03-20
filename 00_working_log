@@ -1,0 +1,11 @@
+Working Log for Randy
+
+1. Getting the fork v0.3.0 activPAL//
+2. Down-grading ggplot2 to lower than 3.4.0 to avoid the warning//
+3. Adding the code files into `01_utils.R` and `02_Rcpp.R`
+  - 3.1 `01_utils.R` is for the functions that are used in the main code
+  - 3.2 `02_Rcpp.R` is for the Rcpp functions
+  - 3.3 several function in `02_Rcpp.R` is over-writting the package code
+  - 3.4 deletion of the `walk.test.R` file
+4. Adding new functions for Macbook
+  - 4.1 `~.macbook` and `~.windows` functions are added into `01_utils.R`

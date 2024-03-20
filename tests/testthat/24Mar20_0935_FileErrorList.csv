@@ -1,0 +1,3 @@
+"The following files were not processed","Error Trace","Error Message"
+"Test1-EventsEx.csv","Error in .Call(""_activPAL_bout_end"", PACKAGE = ""activPAL"", seq, activity, ","""_activPAL_bout_end"" not available for .Call() for package ""activPAL"""
+"Test2-EventsEx.csv","Error in .Call(""_activPAL_bout_end"", PACKAGE = ""activPAL"", seq, activity, ","""_activPAL_bout_end"" not available for .Call() for package ""activPAL"""

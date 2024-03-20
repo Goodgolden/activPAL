@@ -25,11 +25,11 @@ Default - 20 hours}
 }
 \description{
 activity.summary.custom.period reads in a csv file containing a list
-    of events files and csv files with time periods of interest (the first two
-    columns should have the start date and end date in the format dd-mm-yy HH:MM).
-    A summary table is saved to a csv file for each events file.  A further csv
-    file giving a summary for all the events file is also generated.  The generated
-    summary activity table for each events file is saved to a csv file, while an
-    additional csv file containing the summaries across all the processed events
-    files is also saved.
+of events files and csv files with time periods of interest (the first two
+columns should have the start date and end date in the format dd-mm-yy HH:MM).
+A summary table is saved to a csv file for each events file.  A further csv
+file giving a summary for all the events file is also generated.  The generated
+summary activity table for each events file is saved to a csv file, while an
+additional csv file containing the summaries across all the processed events
+files is also saved.
 }

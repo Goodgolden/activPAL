@@ -21,14 +21,15 @@ Default - 24 hours.}
 }
 \description{
 activity.summary.by.period processes all the events files (format *Events.csv)
-    in a folder and produces a summary table giving a breakdown across consecutive
-    periods of a specified duration during the day. The output generated matches the
-    output format obtained from using the Daily summaries export in PALanalysis / PALbatch
+in a folder and produces a summary table giving a breakdown across consecutive
+periods of a specified duration during the day. The output generated matches the
+output format obtained from using the Daily summaries export in PALanalysis / PALbatch
 
-    The generated summary activity table for each events file is saved to a csv file,
-    while an additional csv file containing the summaries across all the processed
-    events files is also saved.
+\if{html}{\out{<div class="sourceCode">}}\preformatted{The generated summary activity table for each events file is saved to a csv file,
+while an additional csv file containing the summaries across all the processed
+events files is also saved.
 
-    If the window duration is not a factor of 24, some summary period may encompass events
-    spanning two distinct days
+If the window duration is not a factor of 24, some summary period may encompass events
+spanning two distinct days
+}\if{html}{\out{</div>}}
 }

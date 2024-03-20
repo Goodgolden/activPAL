@@ -3,7 +3,7 @@
 \name{stepping.cadence.bands.folder.custom.stepping.groups}
 \alias{stepping.cadence.bands.folder.custom.stepping.groups}
 \title{Processes events files to produce histograms showing the distribution of stepping and
-    weighted median stepping cadence across two groups of stepping bout duration.}
+weighted median stepping cadence across two groups of stepping bout duration.}
 \usage{
 stepping.cadence.bands.folder.custom.stepping.groups(
   input_folder,
@@ -11,6 +11,7 @@ stepping.cadence.bands.folder.custom.stepping.groups(
   generate_charts = TRUE,
   lower_limit,
   upper_limit,
+  daily_output = FALSE,
   minimum_valid_wear = 20
 )
 }
@@ -28,12 +29,12 @@ cadences are to be generated for each events file. Default = TRUE}
 }
 \description{
 Processes a folder of events files and generates a faceted set of histograms
-    for each events file showing the duration of stepping in different cadence bands (each
-    cadence band has a width of 10 steps per minute) for stepping bouts of duration 10
-    seconds to 1 minute and 1 minute plus.  The weighted median cadence of stepping at
-    each stepping bout duration is also calculated and indicated on the histogram.
-    The values of the weighted median cadence for each stepping duration across all the
-    processed events files is also returned as a data.frame.
+for each events file showing the duration of stepping in different cadence bands (each
+cadence band has a width of 10 steps per minute) for stepping bouts of duration 10
+seconds to 1 minute and 1 minute plus.  The weighted median cadence of stepping at
+each stepping bout duration is also calculated and indicated on the histogram.
+The values of the weighted median cadence for each stepping duration across all the
+processed events files is also returned as a data.frame.
 }
 \examples{
 input_folder <- paste(system.file("extdata", "", package = "activPAL"),"/",sep="")

@@ -14,20 +14,20 @@ daily.stepping.activity.bubble.chart(input_folder, output_folder)
 }
 \description{
 Processes a folder of events files to output bubble charts showing
-    the daily distribution of stepping cadences.
-    A bubble chart shows daily patterns in stepping behaviour.  For each
-    valid day of activity data a bubble is plotted on the chart.  The
-    centre of bubble indicates the weighted median cadence of all stepping
-    bouts of duration between 10 seconds and one minute (x-axis position)
-    and the weighted median cadence of all stepping bouts of duration greater
-    than or equal to one minute (y-axis position).  The height of a bubble
-    indicates the weighted upper quartile  (y - max) and lower quartile
-    (y - min) cadence across the stepping bouts of duration greater than or
-    equal to one minute occurring during the given day.  The width of a bubble
-    indicates the weighted upper quartile  (x - right) and lower quartile
-    (x - left) cadence across the stepping bouts of duration between 10 seconds
-    and one minute occurring during the given day.
-    Each bubble chart is saved as a .png image.
+the daily distribution of stepping cadences.
+A bubble chart shows daily patterns in stepping behaviour.  For each
+valid day of activity data a bubble is plotted on the chart.  The
+centre of bubble indicates the weighted median cadence of all stepping
+bouts of duration between 10 seconds and one minute (x-axis position)
+and the weighted median cadence of all stepping bouts of duration greater
+than or equal to one minute (y-axis position).  The height of a bubble
+indicates the weighted upper quartile  (y - max) and lower quartile
+(y - min) cadence across the stepping bouts of duration greater than or
+equal to one minute occurring during the given day.  The width of a bubble
+indicates the weighted upper quartile  (x - right) and lower quartile
+(x - left) cadence across the stepping bouts of duration between 10 seconds
+and one minute occurring during the given day.
+Each bubble chart is saved as a .png image.
 }
 \examples{
 input_folder <- paste(system.file("extdata", "", package = "activPAL"),"/",sep="")

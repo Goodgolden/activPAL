@@ -8,29 +8,30 @@ activity_order <- c("lying","secondary lying","sedentary","travel",
                     "standing","cycling","stepping",
                     "non-wear")
 
+#' Combines events file data with observational data across multiple events files
+#' to produce and save charts
+#' @description Reads in a csv file containing a list of events file locations and
+#'     overlay file locations, generating and saving spiral and linear charts for
+#'     each events file aligning the events file data with the corresponding overlay
+#'     data.
+#'     Where the overlay data is non-continuous data (such as sleeps diaries) the
+#'     csv file should have the columns start_time (dd-mm-YYYY HH:MM),
+#'     end_time (dd-mm-YYYY HH:MM) and category (text).
+#'     Where the overlay data is continuous data (such as continuous glucose monitoring)
+#'     the csv file should have the columns start_time (dd-mm-YYYY HH:MM) and
+#'     category (text).  In this case the end time coincides with the start time of
+#'     the subsequent observation.
+#'     The charts are saved as png images with two images generated for each events
+#'     file / overlay file pair (one spiral chart and one linear chart). \cr
+#'     \strong{Note}: Spiral plots are generated using ggplot2 and coord_polar() and can take
+#'     45 - 60 seconds to generate each spiral plot.
+#' @param index_file_location The filepath for the csv file with the following column names
+#'     file_id, events_file, overlay_file
+#' @param output_folder The filepath of the folder where the generated chart are to be saved to
+#' @export
+
 activity.with.overlay.chart.folder <-
   function(index_file_location,output_folder){
-    #' Combines events file data with observational data across multiple events files
-    #' to produce and save charts
-    #' @description Reads in a csv file containing a list of events file locations and
-    #'     overlay file locations, generating and saving spiral and linear charts for
-    #'     each events file aligning the events file data with the corresponding overlay
-    #'     data.
-    #'     Where the overlay data is non-continuous data (such as sleeps diaries) the
-    #'     csv file should have the columns start_time (dd-mm-YYYY HH:MM),
-    #'     end_time (dd-mm-YYYY HH:MM) and category (text).
-    #'     Where the overlay data is continuous data (such as continuous glucose monitoring)
-    #'     the csv file should have the columns start_time (dd-mm-YYYY HH:MM) and
-    #'     category (text).  In this case the end time coincides with the start time of
-    #'     the subsequent observation.
-    #'     The charts are saved as png images with two images generated for each events
-    #'     file / overlay file pair (one spiral chart and one linear chart). \cr
-    #'     \strong{Note}: Spiral plots are generated using ggplot2 and coord_polar() and can take
-    #'     45 - 60 seconds to generate each spiral plot.
-    #' @param index_file_location The filepath for the csv file with the following column names
-    #'     file_id, events_file, overlay_file
-    #' @param output_folder The filepath of the folder where the generated chart are to be saved to
-    #' @export
 
     if(!valid.file.path(index_file_location)){
       stop("A valid file name for index_file_location has not been provided.")

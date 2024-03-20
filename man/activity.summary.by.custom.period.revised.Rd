@@ -24,20 +24,21 @@ activity.summary.by.custom.period.revised(
 and optional rise time files (format *RiseSitData.csv) to be processed are saved.}
 
 \item{period_file}{The location of a csv files containing the details of custom periods to
-    to be used when analysing the supplied events files.
+to be used when analysing the supplied events files.
 
-    If the location of a valid file is supplied the csv file with the suffix "_Custom_Summary"
-    will be generated containing the outcomes using the supplied periods.
+\if{html}{\out{<div class="sourceCode">}}\preformatted{If the location of a valid file is supplied the csv file with the suffix "_Custom_Summary"
+will be generated containing the outcomes using the supplied periods.
 
-    Each row defines a single observation for a single events file. The following columns
-    must be in the spreadsheet.
-    filename = an identifier for the events file that the period is for.  This should be
-    the same as the identifier generated using the prefix_delimiter and prefix_length parameters
-    startime = the starting time of the period
-    endtime = the ending time of the period
-    The function will attempt to parse the supplied times in the following order
-    "YYYY-mm-dd HH:MM", "YYYY-mm-dd HH:MM:SS", "YYYY-dd-mm HH:MM", "YYYY-dd-mm HH:MM:SS",
-    "dd/mm/YYYY HH:MM", "dd/mm/YYYY HH:MM:SS", "mm/dd/YYYY HH:MM", "mm/dd/YYYY HH:MM:SS"}
+Each row defines a single observation for a single events file. The following columns
+must be in the spreadsheet.
+filename = an identifier for the events file that the period is for.  This should be
+the same as the identifier generated using the prefix_delimiter and prefix_length parameters
+startime = the starting time of the period
+endtime = the ending time of the period
+The function will attempt to parse the supplied times in the following order
+"YYYY-mm-dd HH:MM", "YYYY-mm-dd HH:MM:SS", "YYYY-dd-mm HH:MM", "YYYY-dd-mm HH:MM:SS",
+"dd/mm/YYYY HH:MM", "dd/mm/YYYY HH:MM:SS", "mm/dd/YYYY HH:MM", "mm/dd/YYYY HH:MM:SS"
+}\if{html}{\out{</div>}}}
 
 \item{output_folder}{The folder where the physical behaviour summary report is to be saved.
 By default the report is saved in the current working directory}
@@ -61,11 +62,11 @@ This parameter will only be used if a valid period file is supplied}
 }
 \description{
 activity.summary.custom.period.revised reads in a csv file containing a list
-    of events files and csv files with time periods of interest (the first two
-    columns should have the start date and end date in the format dd-mm-yy HH:MM).
-    A summary table is saved to a csv file for each events file.  A further csv
-    file giving a summary for all the events file is also generated.  The generated
-    summary activity table for each events file is saved to a csv file, while an
-    additional csv file containing the summaries across all the processed events
-    files is also saved.
+of events files and csv files with time periods of interest (the first two
+columns should have the start date and end date in the format dd-mm-yy HH:MM).
+A summary table is saved to a csv file for each events file.  A further csv
+file giving a summary for all the events file is also generated.  The generated
+summary activity table for each events file is saved to a csv file, while an
+additional csv file containing the summaries across all the processed events
+files is also saved.
 }

@@ -252,7 +252,8 @@ activpal.process.folder.macbook <-
                                                         min_value[j],
                                                         0.1,
                                                         max_value[j],
-                                                        72000, TRUE)
+                                                        72000,
+                                                        TRUE)
 
 
           time_value2 <- sed.start.end.marker(events_file,
@@ -351,15 +352,6 @@ activpal.process.folder.macbook <-
   }
 
 
-
-
-
-
-
-
-
-
-
 ## 1.3 parse.file.name -----------------------------------------------------------
 #' Title
 #'
@@ -367,8 +359,7 @@ activpal.process.folder.macbook <-
 #'
 #' @return
 #' @export
-#'
-#' @examples
+
 parse.file.name <-
   function(file_name) {
 
@@ -999,3 +990,329 @@ individual.chart.overlay.windows <-
                                                      sep = ""))
     }
   }
+
+
+## 1.14 apSummary ---------------------------------------------------------------
+
+apSummary.windows <- function(Events_Files_To_Process_folder_location,
+                              Confirmed_Output_folder_location) {
+  file_names <- list.files(Events_Files_To_Process_folder_location,
+                           pattern = "*Events.csv",
+                           recursive = TRUE)
+
+  for (i in file_names) {
+    id <- unlist(strsplit(i, "-"))[1]
+
+    print(id)
+
+    ex.times.list <- list.files(Confirmed_Output_folder_location,
+                                pattern = "*_ex_times_confirmed.csv",
+                                recursive = TRUE)
+    ex.times.path <- ex.times.list[grep(id, ex.times.list)]
+
+    if (length(ex.times.path) == 0) {
+      print(id)
+      print("No Exercise Times")
+    }
+
+    if (length(ex.times.path) > 0) {
+      events_file <- read.csv(paste(Events_Files_To_Process_folder_location,
+                                    i, sep = ""),
+                              row.names = NULL,
+                              sep = ",",
+                              stringsAsFactors = FALSE)
+
+      events_file$Time <- as.POSIXct(as.numeric(events_file$Time) * 86400,
+                                     origin = "1899-12-30",
+                                     tz = "UTC")
+      events_file$Date <- as.Date(events_file$Time)
+
+      events_file$date <- as.Date(events_file$Time)
+
+      events_file$exercise <- 0
+
+      colnames(events_file)[4] <- "Event.Type"
+      colnames(events_file)[3] <- "Duration..s."
+
+      # 	events_file <- split.days(events_file)
+
+      ## Split events that cross two days ##
+
+      events_file <- events_file[order(events_file$Time), ]
+      rownames(events_file) <- 1:nrow(events_file)
+      events_file$date <- as.Date(events_file$Time)
+      events_file$diff <- (difftime(events_file$Time,
+                                    events_file$date,
+                                    tz = "UTC",
+                                    units = "secs") +
+                             events_file$Duration..s.) - 86400
+      cross.days <- which(events_file$diff > 0)
+      events_file <- rbind(events_file, events_file[cross.days, ])
+      events_file[cross.days, ]$Duration..s. <-
+        round(events_file[cross.days, ]$Duration..s. - events_file[cross.days, ]$diff, 1)
+      events_file[(nrow(events_file) - length(cross.days) + 1):nrow(events_file), ]$Duration..s. <-
+        round(events_file[(nrow(events_file) - length(cross.days) + 1):nrow(events_file), ]$diff, 1)
+      events_file[(nrow(events_file) - length(cross.days) + 1):nrow(events_file), ]$Time <-
+        events_file[(nrow(events_file) - length(cross.days) + 1):nrow(events_file), ]$date + 1
+      events_file <- events_file[order(events_file$Time), ]
+      rownames(events_file) <- 1:nrow(events_file)
+      events_file$date <- as.Date(events_file$Time)
+
+      ### 	a valid day is set for 20hrs of wear	###
+
+      valid_day_list <- valid.days(events_file)
+      events_file <- events_file[which(events_file$date %in% valid_day_list), ]
+
+
+      #  	id <- unlist(strsplit(i,"-"))[1]
+
+      ex.times <- read.csv(paste(Confirmed_Output_folder_location, id, "\\",
+                                 id, "_ex_times_confirmed.csv", sep = ""))
+
+      ex.times$Ex_Start <- strptime(ex.times$Ex_Start, format = "%m/%d/%Y %H:%M", tz = "UTC")
+      ex.times$Ex_End <- strptime(ex.times$Ex_End, format = "%m/%d/%Y %H:%M", tz = "UTC")
+
+      et <- dim(ex.times)[1]
+
+      # 	e <- 1
+      # 	head(events_file)
+      # 	unique(events_file$exercise)
+
+      for (e in (1:et)) {
+        start <- ex.times$Ex_Start[e]
+        end <- ex.times$Ex_End[e]
+
+        events_file$exercise[which(events_file$Time >= start & events_file$Time < end)] <- 1
+      }
+
+      n <- dim(events_file)[1]
+
+      for (f in (1:(n - 1))) {
+        temp.num.steps <- events_file$CumulativeStepCount[f + 1] -
+          events_file$CumulativeStepCount[f]
+        if (f == 1) {
+          num.steps <- temp.num.steps
+        }
+        if (f != 1) {
+          num.steps <- c(num.steps, temp.num.steps)
+        }
+      }
+      num.steps <- c(events_file$CumulativeStepCount[1], num.steps)
+      events_file$Num.Steps <- num.steps
+
+
+      #     	dates <- as.Date(strptime(ex.times$Date,format="%m/%d/%Y",tz="UTC"))
+
+      dates <- valid_day_list
+
+      date.counter <- 1
+
+      # 	d <- dates[1]
+      # 	head(events_file)
+
+      for (d in dates) {
+        temp.day <- events_file[which(events_file$date == d), ]
+
+        td <- dim(temp.day)[1]
+        temp.day.ex <- temp.day[which(temp.day$exercise == 1), ]
+        tde <- dim(temp.day.ex)[1]
+
+        tot.steps <- sum(temp.day$Num.Steps[which(temp.day$Event.Type == 2)]) * 2
+        ex.steps <- sum(temp.day.ex$Num.Steps[which(temp.day.ex$Event.Type == 2)]) * 2
+        ex.step.mins <- sum(temp.day.ex$Duration..s.[which(temp.day.ex$Event.Type == 2)]) / 60
+        stand.min <- sum(temp.day$Duration..s.[which(temp.day$Event.Type == 1)]) / 60
+        sed.min <- sum(temp.day$Duration..s.[which(temp.day$Event.Type == 0 | temp.day$Event.Type == 5)]) / 60
+        tot.step.min <- sum(temp.day$Duration..s.[which(temp.day$Event.Type == 2)]) / 60
+        tot.min <- (sum(temp.day$Duration..s.[which(temp.day$Event.Type != 4)]) / 60)
+        tot.cycling.min <- sum(temp.day$Duration..s.[which(temp.day$Event.Type == 2.1)]) / 60
+
+        wake.min <- sum(temp.day$Duration..s.[which(temp.day$Event.Type != 3.1 & temp.day$Event.Type != 3.2 & temp.day$Event.Type != 4.0)]) / 60
+        sleep.min <- sum(temp.day$Duration..s.[which(temp.day$Event.Type == 3.1 | temp.day$Event.Type == 3.2)]) / 60
+
+        non.ex.step.min <- tot.step.min - ex.step.mins
+        non.ex.num.step <- tot.steps - ex.steps
+
+        temp.summary <- data.frame("Participant ID" = id, "Day" = date.counter, "Date Worn" = unique(temp.day$date), "Total Steps" = tot.steps, "Exercise Steps" = ex.steps, "Steps w/o Exercise" = non.ex.num.step, "Sleep (min)" = sleep.min, "Wake (min)" = wake.min, "Time Standing (min)" = stand.min, "Time Walking (min)" = tot.step.min, "Time Sedentary (min)" = sed.min, "Total Time (min)" = tot.min, "Total Other (min)" = tot.cycling.min, check.names = FALSE)
+
+        if (date.counter == 1) {
+          summary <- temp.summary
+        }
+        if (date.counter > 1) {
+          summary <- rbind(summary, temp.summary)
+        }
+
+        date.counter <- date.counter + 1
+      }
+      write.table(summary, file = paste(Confirmed_Output_folder_location,
+                                        id,
+                                        "\\",
+                                        id,
+                                        "_summary_confirmed.csv",
+                                        sep = ""),
+                  row.names = FALSE, sep = ",")
+    }
+  }
+}
+
+apSummary.macbook <- function(Events_Files_To_Process_folder_location,
+                              Confirmed_Output_folder_location) {
+  file_names <- list.files(Events_Files_To_Process_folder_location,
+                           pattern = "*Events.csv",
+                           recursive = TRUE)
+
+  for (i in file_names) {
+    id <- unlist(strsplit(i, "-"))[1]
+
+    print(id)
+
+    ex.times.list <- list.files(Confirmed_Output_folder_location,
+                                pattern = "*_ex_times_confirmed.csv",
+                                recursive = TRUE)
+    ex.times.path <- ex.times.list[grep(id, ex.times.list)]
+
+    if (length(ex.times.path) == 0) {
+      print(id)
+      print("No Exercise Times")
+    }
+
+    if (length(ex.times.path) > 0) {
+      events_file <- read.csv(paste(Events_Files_To_Process_folder_location,
+                                    i, sep = ""),
+                              row.names = NULL,
+                              sep = ",",
+                              stringsAsFactors = FALSE)
+
+      events_file$Time <- as.POSIXct(as.numeric(events_file$Time) * 86400,
+                                     origin = "1899-12-30",
+                                     tz = "UTC")
+      events_file$Date <- as.Date(events_file$Time)
+
+      events_file$date <- as.Date(events_file$Time)
+
+      events_file$exercise <- 0
+
+      colnames(events_file)[4] <- "Event.Type"
+      colnames(events_file)[3] <- "Duration..s."
+
+      # 	events_file <- split.days(events_file)
+
+      ## Split events that cross two days ##
+
+      events_file <- events_file[order(events_file$Time), ]
+      rownames(events_file) <- 1:nrow(events_file)
+      events_file$date <- as.Date(events_file$Time)
+      events_file$diff <- (difftime(events_file$Time,
+                                    events_file$date,
+                                    tz = "UTC",
+                                    units = "secs") +
+                             events_file$Duration..s.) - 86400
+      cross.days <- which(events_file$diff > 0)
+      events_file <- rbind(events_file, events_file[cross.days, ])
+      events_file[cross.days, ]$Duration..s. <-
+        round(events_file[cross.days, ]$Duration..s. - events_file[cross.days, ]$diff, 1)
+      events_file[(nrow(events_file) - length(cross.days) + 1):nrow(events_file), ]$Duration..s. <-
+        round(events_file[(nrow(events_file) - length(cross.days) + 1):nrow(events_file), ]$diff, 1)
+      events_file[(nrow(events_file) - length(cross.days) + 1):nrow(events_file), ]$Time <-
+        events_file[(nrow(events_file) - length(cross.days) + 1):nrow(events_file), ]$date + 1
+      events_file <- events_file[order(events_file$Time), ]
+      rownames(events_file) <- 1:nrow(events_file)
+      events_file$date <- as.Date(events_file$Time)
+
+      ### 	a valid day is set for 20hrs of wear	###
+
+      valid_day_list <- valid.days(events_file)
+      events_file <- events_file[which(events_file$date %in% valid_day_list), ]
+
+
+      #  	id <- unlist(strsplit(i,"-"))[1]
+
+      ex.times <- read.csv(paste(Confirmed_Output_folder_location,
+                                 id, "/",
+                                 id, "_ex_times_confirmed.csv",
+                                 sep = ""))
+
+      ex.times$Ex_Start <- strptime(ex.times$Ex_Start, format = "%m/%d/%Y %H:%M", tz = "UTC")
+      ex.times$Ex_End <- strptime(ex.times$Ex_End, format = "%m/%d/%Y %H:%M", tz = "UTC")
+
+      et <- dim(ex.times)[1]
+
+      # 	e <- 1
+      # 	head(events_file)
+      # 	unique(events_file$exercise)
+
+      for (e in (1:et)) {
+        start <- ex.times$Ex_Start[e]
+        end <- ex.times$Ex_End[e]
+
+        events_file$exercise[which(events_file$Time >= start & events_file$Time < end)] <- 1
+      }
+
+      n <- dim(events_file)[1]
+
+      for (f in (1:(n - 1))) {
+        temp.num.steps <- events_file$CumulativeStepCount[f + 1] -
+          events_file$CumulativeStepCount[f]
+        if (f == 1) {
+          num.steps <- temp.num.steps
+        }
+        if (f != 1) {
+          num.steps <- c(num.steps, temp.num.steps)
+        }
+      }
+      num.steps <- c(events_file$CumulativeStepCount[1], num.steps)
+      events_file$Num.Steps <- num.steps
+
+
+      #     	dates <- as.Date(strptime(ex.times$Date,format="%m/%d/%Y",tz="UTC"))
+
+      dates <- valid_day_list
+
+      date.counter <- 1
+
+      # 	d <- dates[1]
+      # 	head(events_file)
+
+      for (d in dates) {
+        temp.day <- events_file[which(events_file$date == d), ]
+
+        td <- dim(temp.day)[1]
+        temp.day.ex <- temp.day[which(temp.day$exercise == 1), ]
+        tde <- dim(temp.day.ex)[1]
+
+        tot.steps <- sum(temp.day$Num.Steps[which(temp.day$Event.Type == 2)]) * 2
+        ex.steps <- sum(temp.day.ex$Num.Steps[which(temp.day.ex$Event.Type == 2)]) * 2
+        ex.step.mins <- sum(temp.day.ex$Duration..s.[which(temp.day.ex$Event.Type == 2)]) / 60
+        stand.min <- sum(temp.day$Duration..s.[which(temp.day$Event.Type == 1)]) / 60
+        sed.min <- sum(temp.day$Duration..s.[which(temp.day$Event.Type == 0 | temp.day$Event.Type == 5)]) / 60
+        tot.step.min <- sum(temp.day$Duration..s.[which(temp.day$Event.Type == 2)]) / 60
+        tot.min <- (sum(temp.day$Duration..s.[which(temp.day$Event.Type != 4)]) / 60)
+        tot.cycling.min <- sum(temp.day$Duration..s.[which(temp.day$Event.Type == 2.1)]) / 60
+
+        wake.min <- sum(temp.day$Duration..s.[which(temp.day$Event.Type != 3.1 & temp.day$Event.Type != 3.2 & temp.day$Event.Type != 4.0)]) / 60
+        sleep.min <- sum(temp.day$Duration..s.[which(temp.day$Event.Type == 3.1 | temp.day$Event.Type == 3.2)]) / 60
+
+        non.ex.step.min <- tot.step.min - ex.step.mins
+        non.ex.num.step <- tot.steps - ex.steps
+
+        temp.summary <- data.frame("Participant ID" = id, "Day" = date.counter, "Date Worn" = unique(temp.day$date), "Total Steps" = tot.steps, "Exercise Steps" = ex.steps, "Steps w/o Exercise" = non.ex.num.step, "Sleep (min)" = sleep.min, "Wake (min)" = wake.min, "Time Standing (min)" = stand.min, "Time Walking (min)" = tot.step.min, "Time Sedentary (min)" = sed.min, "Total Time (min)" = tot.min, "Total Other (min)" = tot.cycling.min, check.names = FALSE)
+
+        if (date.counter == 1) {
+          summary <- temp.summary
+        }
+        if (date.counter > 1) {
+          summary <- rbind(summary, temp.summary)
+        }
+
+        date.counter <- date.counter + 1
+      }
+      write.table(summary, file = paste(Confirmed_Output_folder_location,
+                                        # Wed Mar 20 10:29:24 2024 -------------
+                                        ## change the separator to / for mac----
+                                        id, "/", id,
+                                        "_summary_confirmed.csv",
+                                        sep = ""),
+                  row.names = FALSE,
+                  sep = ",")
+    }
+  }
+}

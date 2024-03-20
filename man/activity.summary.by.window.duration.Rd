@@ -27,13 +27,13 @@ Default - 20 hours.}
 }
 \description{
 activity.summary.window processes all the events files (format *Events.csv)
-    in a folder and produces a summary table giving a breakdown of the number and
-    duration of each event type across consecutive periods of a specified duration
-    during the day. If the window_size is not a factor of 24, the final period will
-    be shorter than the other reporting periods, generating a warning to advise of
-    this difference in reporting period duration.  The generated summary activity
-    table for each events file is saved to a csv file, while an additional csv file
-    containing the summaries across all the processed events files is also saved.
+in a folder and produces a summary table giving a breakdown of the number and
+duration of each event type across consecutive periods of a specified duration
+during the day. If the window_size is not a factor of 24, the final period will
+be shorter than the other reporting periods, generating a warning to advise of
+this difference in reporting period duration.  The generated summary activity
+table for each events file is saved to a csv file, while an additional csv file
+containing the summaries across all the processed events files is also saved.
 }
 \examples{
 input_folder <- paste(system.file("extdata", "", package = "activPAL"),"/",sep="")

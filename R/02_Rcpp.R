@@ -3,7 +3,8 @@
 
 ## 2.1 activpal.stepping.process.file ------------------------------------------------
 activpal.stepping.process.file <-
-  function(events_file, window_size = 2700,
+  function(events_file,
+           window_size = 2700,
            lower_bout_size = 0.1,
            max_bout_size = 86400,
            wear_time_minimum = 72000,
@@ -80,7 +81,10 @@ activpal.stepping.process.file <-
 
 ## 2.2 activpal.remove.longer.bouts ------------------------------------------------
 activpal.remove.longer.bouts <-
-  function(file_data, lower_bout_length, upper_bout_length) {
+  function(file_data,
+           lower_bout_length,
+           upper_bout_length) {
+    # browser()
     rownames(file_data) <- 1:nrow(file_data)
 
     # file_data[which(file_data$Event.Type == 2 & file_data$Duration..s. > 4),]$Event.Type <-
@@ -95,6 +99,7 @@ activpal.remove.longer.bouts <-
     file_data$group <- 0
     group_id <- 1:length(stepping_start)
     group_val <- rep(0, nrow(file_data))
+
 
     for (i in (1:length(stepping_start))) {
       # Tag each bout of stepping
@@ -121,7 +126,7 @@ activpal.remove.longer.bouts <-
 ##
 activpal.stepping.test.file <-
   function(file.data, window.size) {
-    library(Rcpp)
+    # library(Rcpp)
     # extract the activpal code from the filename.
     # Assumes the filename is stored in the format AP
 
@@ -257,146 +262,10 @@ split.days <-
     return(data)
   }
 
-## 2.8 apSummary ---------------------------------------------------------------
-
-apSummary <- function(Events_Files_To_Process_folder_location, Confirmed_Output_folder_location) {
-  file_names <- list.files(Events_Files_To_Process_folder_location, pattern = "*Events.csv", recursive = TRUE)
-
-  for (i in file_names) {
-    id <- unlist(strsplit(i, "-"))[1]
-
-    print(id)
-
-    ex.times.list <- list.files(Confirmed_Output_folder_location, pattern = "*_ex_times_confirmed.csv", recursive = TRUE)
-    ex.times.path <- ex.times.list[grep(id, ex.times.list)]
-
-    if (length(ex.times.path) == 0) {
-      print(id)
-      print("No Exercise Times")
-    }
-
-    if (length(ex.times.path) > 0) {
-      events_file <- read.csv(paste(Events_Files_To_Process_folder_location, i, sep = ""), row.names = NULL, sep = ",", stringsAsFactors = FALSE)
-
-      events_file$Time <- as.POSIXct(as.numeric(events_file$Time) * 86400, origin = "1899-12-30", tz = "UTC")
-      events_file$Date <- as.Date(events_file$Time)
-
-      events_file$date <- as.Date(events_file$Time)
-
-      events_file$exercise <- 0
-
-      colnames(events_file)[4] <- "Event.Type"
-      colnames(events_file)[3] <- "Duration..s."
-
-      # 	events_file <- split.days(events_file)
-
-      ## Split events that cross two days ##
-
-      events_file <- events_file[order(events_file$Time), ]
-      rownames(events_file) <- 1:nrow(events_file)
-      events_file$date <- as.Date(events_file$Time)
-      events_file$diff <- (difftime(events_file$Time, events_file$date, tz = "UTC", units = "secs") + events_file$Duration..s.) - 86400
-      cross.days <- which(events_file$diff > 0)
-      events_file <- rbind(events_file, events_file[cross.days, ])
-      events_file[cross.days, ]$Duration..s. <- round(events_file[cross.days, ]$Duration..s. - events_file[cross.days, ]$diff, 1)
-      events_file[(nrow(events_file) - length(cross.days) + 1):nrow(events_file), ]$Duration..s. <- round(events_file[(nrow(events_file) - length(cross.days) + 1):nrow(events_file), ]$diff, 1)
-      events_file[(nrow(events_file) - length(cross.days) + 1):nrow(events_file), ]$Time <- events_file[(nrow(events_file) - length(cross.days) + 1):nrow(events_file), ]$date + 1
-      events_file <- events_file[order(events_file$Time), ]
-      rownames(events_file) <- 1:nrow(events_file)
-      events_file$date <- as.Date(events_file$Time)
-
-      ### 	a valid day is set for 20hrs of wear	###
-
-      valid_day_list <- valid.days(events_file)
-      events_file <- events_file[which(events_file$date %in% valid_day_list), ]
-
-
-      #  	id <- unlist(strsplit(i,"-"))[1]
-
-      ex.times <- read.csv(paste(Confirmed_Output_folder_location, id, "\\", id, "_ex_times_confirmed.csv", sep = ""))
-
-      ex.times$Ex_Start <- strptime(ex.times$Ex_Start, format = "%m/%d/%Y %H:%M", tz = "UTC")
-      ex.times$Ex_End <- strptime(ex.times$Ex_End, format = "%m/%d/%Y %H:%M", tz = "UTC")
-
-      et <- dim(ex.times)[1]
-
-      # 	e <- 1
-      # 	head(events_file)
-      # 	unique(events_file$exercise)
-
-      for (e in (1:et)) {
-        start <- ex.times$Ex_Start[e]
-        end <- ex.times$Ex_End[e]
-
-        events_file$exercise[which(events_file$Time >= start & events_file$Time < end)] <- 1
-      }
-
-      n <- dim(events_file)[1]
-
-      for (f in (1:(n - 1))) {
-        temp.num.steps <- events_file$CumulativeStepCount[f + 1] - events_file$CumulativeStepCount[f]
-        if (f == 1) {
-          num.steps <- temp.num.steps
-        }
-        if (f != 1) {
-          num.steps <- c(num.steps, temp.num.steps)
-        }
-      }
-      num.steps <- c(events_file$CumulativeStepCount[1], num.steps)
-      events_file$Num.Steps <- num.steps
-
-
-      #     	dates <- as.Date(strptime(ex.times$Date,format="%m/%d/%Y",tz="UTC"))
-
-      dates <- valid_day_list
-
-      date.counter <- 1
-
-      # 	d <- dates[1]
-      # 	head(events_file)
-
-      for (d in dates) {
-        temp.day <- events_file[which(events_file$date == d), ]
-
-        td <- dim(temp.day)[1]
-        temp.day.ex <- temp.day[which(temp.day$exercise == 1), ]
-        tde <- dim(temp.day.ex)[1]
-
-        tot.steps <- sum(temp.day$Num.Steps[which(temp.day$Event.Type == 2)]) * 2
-        ex.steps <- sum(temp.day.ex$Num.Steps[which(temp.day.ex$Event.Type == 2)]) * 2
-        ex.step.mins <- sum(temp.day.ex$Duration..s.[which(temp.day.ex$Event.Type == 2)]) / 60
-        stand.min <- sum(temp.day$Duration..s.[which(temp.day$Event.Type == 1)]) / 60
-        sed.min <- sum(temp.day$Duration..s.[which(temp.day$Event.Type == 0 | temp.day$Event.Type == 5)]) / 60
-        tot.step.min <- sum(temp.day$Duration..s.[which(temp.day$Event.Type == 2)]) / 60
-        tot.min <- (sum(temp.day$Duration..s.[which(temp.day$Event.Type != 4)]) / 60)
-        tot.cycling.min <- sum(temp.day$Duration..s.[which(temp.day$Event.Type == 2.1)]) / 60
-
-        wake.min <- sum(temp.day$Duration..s.[which(temp.day$Event.Type != 3.1 & temp.day$Event.Type != 3.2 & temp.day$Event.Type != 4.0)]) / 60
-        sleep.min <- sum(temp.day$Duration..s.[which(temp.day$Event.Type == 3.1 | temp.day$Event.Type == 3.2)]) / 60
-
-        non.ex.step.min <- tot.step.min - ex.step.mins
-        non.ex.num.step <- tot.steps - ex.steps
-
-        temp.summary <- data.frame("Participant ID" = id, "Day" = date.counter, "Date Worn" = unique(temp.day$date), "Total Steps" = tot.steps, "Exercise Steps" = ex.steps, "Steps w/o Exercise" = non.ex.num.step, "Sleep (min)" = sleep.min, "Wake (min)" = wake.min, "Time Standing (min)" = stand.min, "Time Walking (min)" = tot.step.min, "Time Sedentary (min)" = sed.min, "Total Time (min)" = tot.min, "Total Other (min)" = tot.cycling.min, check.names = FALSE)
-
-        if (date.counter == 1) {
-          summary <- temp.summary
-        }
-        if (date.counter > 1) {
-          summary <- rbind(summary, temp.summary)
-        }
-
-        date.counter <- date.counter + 1
-      }
-      write.table(summary, file = paste(Confirmed_Output_folder_location, id, "\\", id, "_summary_confirmed.csv", sep = ""), row.names = FALSE, sep = ",")
-    }
-  }
-}
-
 
 ##	functions for overlay charts ------------------------------------------------
 
-##	2.9 activity.with.overlay.chart.folder_drive --------------------------------
+##	2.8 activity.with.overlay.chart.folder_drive --------------------------------
 #' Combines events file data with observational data across multiple events files
 #' to produce and save charts
 #' @description Reads in a csv file containing a list of events file locations and
@@ -451,7 +320,7 @@ activity.with.overlay.chart.folder_drive <-
 
 
 
-## 2.10 activity.with.overlay.chart_drive ----------------------------------------
+## 2.9 activity.with.overlay.chart_drive ----------------------------------------
 
 #' Combines events file data with observational data for a single events file
 #' @description Reads in an events file and overlay file, generating spiral and linear
@@ -502,99 +371,8 @@ activity.with.overlay.chart_drive <-
                                                         events_file)[[1]])] + 1,
              nchar(events_file))
 
-    pre.process.events.file <-
-      function(file_name,folder = "", minimum_valid_wear = 20){
-        events_file <- load.events.file(folder,file_name)
-        events_file <- activpal.file.process(events_file,
-                                             wear.time.minimum = minimum_valid_wear * 3600)
-        return(events_file)
-      }
-
-    activpal.convert.events.extended.file <-
-      function(data){
-        if(length(which(colnames(data) == "Time.approx.")) >= 1){
-          if(rownames(data)[1] != 1){
-            data$time <- as.numeric(rownames(data))
-            data <- data[,c(ncol(data),2,4,3,6:10)]
-          }else{
-            data <- data[,c(1,3,5,4,7:11)]
-          }
-          rownames(data) <- 1:nrow(data)
-          return(data)
-        }else{
-          return(data)
-        }
-      }
-
-    # activpal.file.process<-
-    #   function(data, valid.days = NULL,wear.time.minimum = 72000){
-    #     # takes in an unprocessed activpal file, formatting and processing the file to allow further analysis
-    #     # data = an unprocessed activpal event file
-    #     # wear.time.minimum = minimum wear time required for a day to be considered valid
-    #     process.data<-data
-    #     if(ncol(process.data)==6){
-    #       process.data$abs.sum <- 0
-    #     }
-    #     process.data<-activpal.file.process.rename.row(process.data)
-    #
-    #     process.data$time <- as.POSIXct(process.data$time*86400,origin="1899-12-30",tz="UTC")
-    #     process.data<-process.data[,1:7]
-    #     process.data<-process.data[which(process.data$interval>0),]
-    #
-    #     process.data<-activpal.file.process.merge.stepping(process.data)
-    #     #process.data$steps<-0
-    #     if(!is.null(valid.days)){
-    #       process.data<-activpal.file.process.split.day(process.data,c(6,7,8))
-    #       process.data <- process.data[which(as.Date(process.data$time) %in% valid.days),]
-    #     }else{
-    #       process.data <- process.data[which(process.data$interval<72000),]
-    #       process.data<-activpal.file.process.split.day(process.data,c(6,7,8))
-    #       process.data<-activpal.file.process.exclude.days(process.data,(86400-wear.time.minimum))
-    #     }
-    #     return(process.data)
-    #   }
-
     events_data <- pre.process.events.file(events_file_name,
                                            events_file_folder)
-
-    load.events.file <-
-      function(folder,file_name){
-        # Load cell A1 to test if the events file contains a header
-        events_file <- read.csv(paste(folder,file_name,sep=""), nrows=1, header = FALSE)
-        if(events_file[1,1] == "**header**"){
-          events_file <- read.csv(paste(folder,file_name,sep=""), header = FALSE)
-          data_start <- grep("**data**",events_file$V1,fixed=TRUE)
-          if(length(data_start) == 0){
-            return(NULL)
-          }
-          events_file <- read.csv(paste(folder,file_name,sep=""), skip = data_start[1]+1)
-        }else {
-          events_file <- read.csv(paste(folder,file_name,sep=""))
-        }
-        # Loads an activPAL events file and processes the file
-        if(colnames(events_file)[1] == "row.names"){
-          events_file <- events_file[,-c(1)]
-        }
-        if(ncol(events_file) == 1){
-          # Is not a csv file.  Load the file to see if it is semi-colon delimited
-          if(events_file[1,1] == "**header**"){
-            events_file <- read.csv(paste(folder,file_name,sep=""), header = FALSE)
-            data_start <- grep("**data**",events_file$V1,fixed=TRUE)
-            if(length(data_start) == 0){
-              return(NULL)
-            }
-            events_file <- read.csv(paste(folder,file_name,sep=""), sep=";", skip = data_start[1]+1)
-          }else {
-            events_file <- read.csv(paste(folder,file_name,sep=""), sep=";", skip=1)
-          }
-          if(ncol(events_file) == 1){
-            return(NULL)
-          }
-        }
-        events_file <- activpal.convert.events.extended.file(events_file)
-
-        return(events_file)
-      }
 
 
     overlay_data <- read.csv(paste(overlay_file, sep = ""))
@@ -636,7 +414,7 @@ activity.with.overlay.chart_drive <-
 
 
 
-## 2.11 cppFunction  ------------------------------------------------------------
+# ## 2.11 cppFunction  ------------------------------------------------------------
 Rcpp::cppFunction("std::vector<double> bout_end(std::vector<int> seq, std::vector<double> activity, std::vector<double> interval, int size, int window_size) {
   std::vector<double> end_pos(size * 3);
   for(int i=0; i < size; i++){

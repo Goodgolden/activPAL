@@ -637,7 +637,7 @@ activity.with.overlay.chart_drive <-
 
 
 ## 2.11 cppFunction  ------------------------------------------------------------
-cppFunction("std::vector<double> bout_end(std::vector<int> seq, std::vector<double> activity, std::vector<double> interval, int size, int window_size) {
+Rcpp::cppFunction("std::vector<double> bout_end(std::vector<int> seq, std::vector<double> activity, std::vector<double> interval, int size, int window_size) {
   std::vector<double> end_pos(size * 3);
   for(int i=0; i < size; i++){
     int step_count = 0;

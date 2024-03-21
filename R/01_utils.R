@@ -40,7 +40,7 @@ fun_call <- function(f) {
 
 
 ## 1.2 identify possible exercise bouts	 ----------------------------------------
-#' Title 02 Identify Possible Exercise Bouts
+#' Title activpal.process.folder.windows
 #'
 #' @param Events_Files_To_Process_folder_location
 #' @param Temp_Output_folder_location
@@ -194,6 +194,13 @@ activpal.process.folder.windows <-
 
 
 
+#' Title activpal.process.folder.macbook
+#'
+#' @param Events_Files_To_Process_folder_location
+#' @param Temp_Output_folder_location
+#'
+#' @return
+#' @export
 activpal.process.folder.macbook <-
   function(Events_Files_To_Process_folder_location,
            Temp_Output_folder_location) {
@@ -353,7 +360,7 @@ activpal.process.folder.macbook <-
 
 
 ## 1.3 parse.file.name -----------------------------------------------------------
-#' Title
+#' Title parse.file.name
 #'
 #' @param file_name
 #'
@@ -410,6 +417,12 @@ parse.file.name <-
 
 
 ## 1.4 parse.device.serial -------------------------------------------------------
+#' Title parse.device.serial
+#'
+#' @param file_name
+#'
+#' @return
+#' @export
 parse.device.serial <-
   function(file_name) {
     start_pos <- regexpr("AP[[:digit:]]{6}", file_name)[1]
@@ -421,6 +434,13 @@ parse.device.serial <-
 
 
 ## 1.5 load.validation.date ------------------------------------------------------
+#' Title load.validation.date
+#'
+#' @param data
+#' @param v
+#'
+#' @return
+#' @export
 valid.days <-
   function(data,
            v = 72000) {
@@ -455,6 +475,19 @@ valid.days <-
 
 
 ## 1.6 sed.start.end.marker ------------------------------------------------------
+#' Title sed.start.end.marker
+#'
+#' @param events_file
+#' @param time_value
+#' @param event
+#' @param duration.min
+#' @param duration.max
+#' @param interval
+#'
+#' @return
+#' @export
+#'
+
 sed.start.end.marker <-
   function(events_file,
            time_value,
@@ -538,6 +571,19 @@ sed.start.end.marker <-
 
 
 ## 1.7 stand.start.end.marker ----------------------------------------------------
+#' Title stand.start.end.marker
+#'
+#' @param events_file
+#' @param time_value
+#' @param event
+#' @param duration.min
+#' @param duration.max
+#' @param interval
+#'
+#' @return
+#' @export
+#'
+
 stand.start.end.marker <-
   function(events_file,
            time_value,
@@ -619,6 +665,16 @@ stand.start.end.marker <-
 
 
 ## 1.8 sed.activity.marker -------------------------------------------------------
+#' Title sed.activity.marker
+#'
+#' @param events_file
+#' @param time_value
+#' @param duration
+#'
+#' @return
+#' @export
+#'
+
 sed.activity.marker <-
   function(events_file, time_value, duration) {
     time_value$sed.event <- NA
@@ -643,6 +699,16 @@ sed.activity.marker <-
   }
 
 ## 1.9 transportation.activity.marker --------------------------------------------
+#' Title transportation.activity.marker
+#'
+#' @param events_file
+#' @param time_value
+#' @param duration
+#'
+#' @return
+#' @export
+#'
+
 transportation.activity.marker <-
   function(events_file, time_value, duration) {
     time_value$transportation.event <- NA
@@ -664,6 +730,16 @@ transportation.activity.marker <-
 
 
 ## 1.10 exercise.log -------------------------------------------
+#' Title exercise.log
+#'
+#' @param time_value
+#' @param folder_location
+#' @param id
+#'
+#' @return
+#' @export
+#'
+
 exercise.log <-
   function(time_value, folder_location, id) {
     time_value$exercise.log <- NA
@@ -700,6 +776,12 @@ exercise.log <-
 
 
 ## 1.11 ex.times ---------------------------------------------------------------
+#' Title prepare.ex.times.windows
+#'
+#' @param Temp_Output_folder_location
+#'
+#' @return
+#' @export
 prepare.ex.times.windows <- function(Temp_Output_folder_location) {
 
   last.batched.ids <- read.csv(paste(Temp_Output_folder_location,
@@ -763,6 +845,12 @@ prepare.ex.times.windows <- function(Temp_Output_folder_location) {
 }
 
 
+#' Title prepare.ex.times.macbook
+#'
+#' @param Temp_Output_folder_location
+#'
+#' @return
+#' @export
 prepare.ex.times.macbook <- function(Temp_Output_folder_location) {
 
   last.batched.ids <- read.csv(paste(Temp_Output_folder_location,
@@ -827,6 +915,13 @@ prepare.ex.times.macbook <- function(Temp_Output_folder_location) {
 
 
 ## 1.12 make.index.file ---------------------------------------------------------
+#' Title make.index.file.windows
+#'
+#' @param Events_Files_To_Process_folder_location
+#' @param Temp_Output_folder_location
+#'
+#' @return
+#' @export
 make.index.file.windows <-
   function(Events_Files_To_Process_folder_location,
            Temp_Output_folder_location) {
@@ -885,6 +980,13 @@ make.index.file.windows <-
   }
 
 
+#' Title make.index.file.macbook
+#'
+#' @param Events_Files_To_Process_folder_location
+#' @param Temp_Output_folder_location
+#'
+#' @return
+#' @export
 make.index.file.macbook <-
   function(Events_Files_To_Process_folder_location,
            Temp_Output_folder_location) {
@@ -970,6 +1072,14 @@ individual.chart.overlay.macbook <-
     }
   }
 
+#' Title individual.chart.overlay.windows
+#'
+#' @param Temp_Output_folder_location
+#'
+#' @return
+#' @export
+#'
+
 individual.chart.overlay.windows <-
   function(Temp_Output_folder_location) {
     last.batched.ids <- read.csv(paste(Temp_Output_folder_location,
@@ -994,6 +1104,15 @@ individual.chart.overlay.windows <-
 
 ## 1.14 apSummary ---------------------------------------------------------------
 
+#' Title apSummary.windows
+#'
+#' @param Events_Files_To_Process_folder_location
+#' @param Confirmed_Output_folder_location
+#'
+#' @return
+#' @export
+#'
+#' @examples
 apSummary.windows <- function(Events_Files_To_Process_folder_location,
                               Confirmed_Output_folder_location) {
   file_names <- list.files(Events_Files_To_Process_folder_location,
@@ -1154,6 +1273,15 @@ apSummary.windows <- function(Events_Files_To_Process_folder_location,
   }
 }
 
+#' Title apSummary.macbook
+#'
+#' @param Events_Files_To_Process_folder_location
+#' @param Confirmed_Output_folder_location
+#'
+#' @return
+#' @export
+#'
+#' @examples
 apSummary.macbook <- function(Events_Files_To_Process_folder_location,
                               Confirmed_Output_folder_location) {
   file_names <- list.files(Events_Files_To_Process_folder_location,

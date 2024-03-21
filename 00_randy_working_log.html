@@ -366,14 +366,55 @@ the main code</li>
 <li>3.2 <code>02_Rcpp.R</code> is for the Rcpp functions</li>
 <li>3.3 several function in <code>02_Rcpp.R</code> is over-writting the
 package code</li>
-<li>3.4 deletion of the <code>walk.test.R</code> file</li>
+<li>3.4 deletion of the <code>walk.test.R</code> file
+<ul>
+<li><code>activpal.stepping.process.file()</code></li>
+<li><code>activpal.remove.longer.bouts()</code></li>
+<li><code>activpal.stepping.test.file()</code></li>
+<li><code>activpal.stepping.test.day()</code></li>
+</ul></li>
 </ul>
 <ol start="4" style="list-style-type: decimal">
 <li>Adding new functions for Macbook</li>
 </ol>
 <ul>
 <li>4.1 <code>~.macbook</code> and <code>~.windows</code> functions are
-added into <code>01_utils.R</code></li>
+added into <code>01_utils.R</code> Here are functions modified:
+<ul>
+<li><code>activpal.process.folder()</code></li>
+<li><code>activpal.process.file()</code></li>
+<li><code>prepare.ex.times()</code></li>
+<li><code>make.index.file()</code></li>
+<li><code>individual.chart.overlay()</code></li>
+<li><code>apSummary()</code></li>
+</ul></li>
+<li>4.2 change the directory style for the folder <strong>need to talk
+with Kat</strong></li>
+<li>4.3 add new test for the new functions to work</li>
+</ul>
+<ol start="5" style="list-style-type: decimal">
+<li>Update the DESCRIPTION for different versions of packages</li>
+</ol>
+<ul>
+<li>5.1 also write the install.package with specific version in
+01_setup.Rmd</li>
+<li>5.2 change the directory into Randy’s github repository</li>
+</ul>
+<ol start="6" style="list-style-type: decimal">
+<li>Update the documents with new NAMESPACE and README.md</li>
+</ol>
+<ul>
+<li>6.1 something need to learn about Rcpp</li>
+</ul>
+<pre><code>useDynLib(activPAL)
+exportPattern(&quot;ˆ[[:alpha:]]+&quot;)
+importFrom(Rcpp, evalCpp)</code></pre>
+<ol start="7" style="list-style-type: decimal">
+<li>Meet up with Kat on Monday to check the work on PC</li>
+</ol>
+<ul>
+<li>7.1 probably need to add .R files, if not familiar with
+Rmarkdown</li>
 </ul>
 
 

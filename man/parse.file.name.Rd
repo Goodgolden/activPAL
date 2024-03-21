@@ -2,7 +2,7 @@
 % Please edit documentation in R/01_utils.R
 \name{parse.file.name}
 \alias{parse.file.name}
-\title{Title}
+\title{Title parse.file.name}
 \usage{
 parse.file.name(file_name, prefix_delimiter = NULL, prefix_length = NULL)
 }
@@ -10,5 +10,5 @@ parse.file.name(file_name, prefix_delimiter = NULL, prefix_length = NULL)
 \item{file_name}{}
 }
 \description{
-Title
+Title parse.file.name
 }

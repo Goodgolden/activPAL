@@ -1,4 +1,4 @@
-Working Log for Randy
+# Working Log for Randy
 
 1. Getting the fork v0.3.0 activPAL//
 
@@ -23,3 +23,21 @@ Working Log for Randy
     - `make.index.file()`
     - `individual.chart.overlay()`
     - `apSummary()`
+  - 4.2 change the directory style for the folder **need to talk with Kat**
+  - 4.3 add new test for the new functions to work
+
+5. Update the DESCRIPTION for different versions of packages
+  - 5.1 also write the install.package with specific version in 01_setup.Rmd
+  - 5.2 change the directory into Randy's github repository
+
+6. Update the documents with new NAMESPACE and README.md
+  - 6.1 something need to learn about Rcpp
+
+```
+useDynLib(activPAL)
+exportPattern("ˆ[[:alpha:]]+")
+importFrom(Rcpp, evalCpp)
+```
+
+7. Meet up with Kat on Monday to check the work on PC
+  - 7.1 probably need to add **.R** files, if not familiar with Rmarkdown 

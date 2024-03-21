@@ -2,6 +2,19 @@
 
 
 ## 2.1 activpal.stepping.process.file ------------------------------------------------
+#' Title activpal.stepping.process.file
+#'
+#' @param events_file
+#' @param window_size
+#' @param lower_bout_size
+#' @param max_bout_size
+#' @param wear_time_minimum
+#' @param daily_summary
+#'
+#' @return
+#' @export
+#'
+#' @examples
 activpal.stepping.process.file <-
   function(events_file,
            window_size = 2700,
@@ -80,6 +93,16 @@ activpal.stepping.process.file <-
 
 
 ## 2.2 activpal.remove.longer.bouts ------------------------------------------------
+#' Title activpal.remove.longer.bouts
+#'
+#' @param file_data
+#' @param lower_bout_length
+#' @param upper_bout_length
+#'
+#' @return
+#' @export
+#'
+#' @examples
 activpal.remove.longer.bouts <-
   function(file_data,
            lower_bout_length,
@@ -124,6 +147,15 @@ activpal.remove.longer.bouts <-
 
 ## 2.3 activpal.stepping.test.file ------------------------------------------------
 ##
+#' Title activpal.stepping.test.file
+#'
+#' @param file.data
+#' @param window.size
+#'
+#' @return
+#' @export
+#'
+#' @examples
 activpal.stepping.test.file <-
   function(file.data, window.size) {
     # library(Rcpp)
@@ -161,6 +193,15 @@ activpal.stepping.test.file <-
 
 ## 2.4 activpal.stepping.test.day  ------------------------------------------------
 
+#' Title activpal.stepping.test.day
+#'
+#' @param file.data
+#' @param window.size
+#'
+#' @return
+#' @export
+#'
+#' @examples
 activpal.stepping.test.day <-
   function(file.data, window.size) {
     # library(Rcpp)
@@ -180,6 +221,14 @@ activpal.stepping.test.day <-
 
 
 ## 2.5 activpal.calculate.cadence.change --------------------------------------------
+#' Title activpal.calculate.cadence.change
+#'
+#' @param data
+#'
+#' @return
+#' @export
+#'
+#' @examples
 activpal.calculate.cadence.change <-
   function(data) {
     data <- data[which(data$window_size %% 10 == 0), ]
@@ -191,10 +240,16 @@ activpal.calculate.cadence.change <-
 
 
 ## 2.6 activpal.compare.days -----------------------------------------------------
+#' Title activpal.compare.days
+#'
+#' @param data
+#'
+#' @return
+#' @export
+#'
+#' @examples
 activpal.compare.days <-
   function(data) {
-    library(dplyr)
-
     last_value <- data %>%
       filter(window_size == 600) %>%
       select(uid, steps, duration) %>%
@@ -238,10 +293,17 @@ activpal.compare.days <-
 
 
 ## 2.7 split.days ---------------------------------------------------------------
+#' Title split.days
+#'
+#' @param data
+#' @param v
+#'
+#' @return
+#' @export
+#'
+#' @examples
 split.days <-
   function(data, v = 72000) {
-    library(dplyr)
-
     #    data <- data[,c(1,3,4)]
     #    colnames(data) <- c("time","interval","activity")
     data$end_time <- as.numeric(data$Time) %% 86400 + data$Interval..s.
@@ -287,7 +349,6 @@ split.days <-
 #'     file_id, events_file, overlay_file
 #' @param output_folder The filepath of the folder where the generated chart are to be saved to
 #' @export
-
 activity.with.overlay.chart.folder_drive <-
   function(index_file_location, output_folder) {
 
@@ -345,7 +406,6 @@ activity.with.overlay.chart.folder_drive <-
 #' output_folder <- paste(tempdir(),"/",sep="")
 #'
 #' \donttest{activPAL::activity.with.overlay.chart(events_file,sleep_file,output_folder)}
-
 activity.with.overlay.chart_drive <-
   function(events_file, overlay_file, output_folder) {
     # browser()

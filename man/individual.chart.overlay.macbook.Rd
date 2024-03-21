@@ -2,7 +2,7 @@
 % Please edit documentation in R/01_utils.R
 \name{individual.chart.overlay.macbook}
 \alias{individual.chart.overlay.macbook}
-\title{Title Individual Chart Overlay}
+\title{Title individual.chart.overlay.macbook}
 \usage{
 individual.chart.overlay.macbook(Temp_Output_folder_location)
 }
@@ -10,5 +10,5 @@ individual.chart.overlay.macbook(Temp_Output_folder_location)
 \item{Temp_Output_folder_location}{}
 }
 \description{
-Title Individual Chart Overlay
+Title individual.chart.overlay.macbook
 }

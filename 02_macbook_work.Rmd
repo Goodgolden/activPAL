@@ -2,7 +2,8 @@
 title: "Run Data Drive"
 author: "randy"
 date: "`r Sys.Date()`"
-output: html_document
+output:
+  html_document: default
 ---
 
 ## For MAC or LINUX 

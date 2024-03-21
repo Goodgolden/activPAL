@@ -77,9 +77,7 @@ devtools::install_github("Goodgolden/activPAL_v0.3.0",
                          force = TRUE)
 
 'force = TRUE'
-load_all()
 
-document()
 ```
 
 

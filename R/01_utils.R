@@ -1045,12 +1045,12 @@ make.index.file.macbook <-
   }
 
 ## 1.13 individual.chart.overlay -------------------------------------------------
-#' Title Individual Chart Overlay
+#' Title individual.chart.overlay.macbook
 #'
 #' @param Temp_Output_folder_location
 #'
 #' @return
-
+#' @export
 individual.chart.overlay.macbook <-
   function(Temp_Output_folder_location) {
     last.batched.ids <- read.csv(paste(Temp_Output_folder_location,

@@ -2,6 +2,8 @@
 
 ## Randy's Notes on the activPAL R Tools
 
+### Clarification
+
 This is a package that was developed by:
 
   - [Speirs Craig](mailto:craig@palt.com)
@@ -14,6 +16,22 @@ The original package was developed for use with the [activPAL device](https://gi
     
 Randy simply added extra functions and files to make it work on 
 both Macbook and Windows systems for Dr. Christiansen, Cory's Lab
+
+### Files explanation
+
+There are several files Randy created for Kat's work:
+
+  - `00_development.Rmd` is Randy's package modification files
+
+  - `00_randy_working_log` is Randy's working plan and list
+  
+Here are the files that Kat should use:
+
+  - `01_setup.Rmd` is the setup for the **first time user** to run the codes
+
+  - `02_macbook_work.Rmd` is working file for Macbook, Windows users can ignore this file
+
+  - `03_windows_work.Rmd` is working file for Windows, Macbook users can ignore this file
 
 ## Original Notes from the Author
 

@@ -41,9 +41,9 @@ packageVersion("activPAL")
 
 
 ```{r}
-# use_package("R", type = "Depends", min_version = "4.1")
-# use_package("dplyr", type = "Depends", min_version = "1.1.1")
-# use_package("ggplot2", type = "Depends", min_version = "3.4.2")
+use_package("R", type = "Depends", min_version = "4.1")
+use_package("dplyr", type = "Import", min_version = "1.1.1")
+use_package("ggplot2", type = "Import", min_version = "3.4.0")
 # use_package("readr", type = "Depends", min_version = "2.1.4")
 ```
 
@@ -53,7 +53,7 @@ packageVersion("activPAL")
 document()
 ## always check 
 ## it's good to establish the habit of checking this often.
-# check()
+check()
 ```
 
 

@@ -117,82 +117,90 @@ activity.with.overlay.chart <-
 
   }
 
-activity.with.overlay.single.chart<-  function(activpal.data,overlay.data,file.name,out.path,match="both"){
-    #' @importFrom grDevices gray palette
-    #' @importFrom stats quantile
+activity.with.overlay.single.chart <- function(activpal.data,
+                                               overlay.data,
+                                               file.name,
+                                               out.path,
+                                               match = "both") {
+  #' @importFrom grDevices gray palette
+  #' @importFrom stats quantile
 
-    # overlap_data should be of the format start_time / duration / category or start_time / end_time / category
-    if (!match %in% c("single","both")){
-      match <- "both"
-    }
-
-    # Restrict the activpal.data to the following columns: time,interval,activity,cumulative_steps,steps)
-    activpal.data<-activpal.data[,c(1,3,4,5,8)]
-    overlay.data <- process.overlay.file(overlay.data)
-
-    if (match == "single"){
-      # calculate the plotting start time and end time to include all activity and overlay data
-      start.time<-min(min(activpal.data$time),min(overlay.data$time))
-      end.time<-max(max((activpal.data$time+activpal.data$interval)),max(overlay.data$time+overlay.data$duration))
-    }else{
-      # calculate the plotting start time and end time to exclude leading / trailing data where the activity data or overlay data is missing
-      start.time<-max(min(activpal.data$time),min(overlay.data$time))
-      end.time<-min(max((activpal.data$time+activpal.data$interval)),max(overlay.data$time+overlay.data$duration))
-    }
-
-    # Caclulate the data.frame indexes where there is both activity and overlay data
-    activpal.start<-max(1,(min(which(activpal.data$time>=start.time))-1))
-    activpal.end<-min(max(which(activpal.data$time<=end.time))+1,nrow(activpal.data))
-    overlap.start<-max(1,(min(which(overlay.data$time>=start.time))-1))
-    overlap.end<-min(max(which(overlay.data$time<=end.time))+1,nrow(overlay.data))
-
-    # Restrict the data to exclude data where only one of the stepping / overlay data is available
-    activpal.data<-activpal.data[c(activpal.start:activpal.end),]
-    overlay.data<-overlay.data[c(overlap.start:overlap.end),]
-
-    # Categorise the activity and overlay data to allow correct colouring
-    activpal.data<-characterise.activity(activpal.data)
-
-    # Split any measurements that are greater than 5 minutes into 5 minute segments.
-    # This is necessary to allow correct spiral production
-    activpal.data<-split.events.file(activpal.data,2,300)
-    overlay.data<-split.overlay(overlay.data,2,300)
-
-    # Extract the time of day as the number of seconds following midnight for each of the data files.
-    # This allows correct plotting of the data in regards to the x-axis
-    activpal.data$DayTime<-as.numeric(format(activpal.data$time,"%H"))*3600
-    activpal.data$DayTime<-activpal.data$DayTime+as.numeric(format(activpal.data$time,"%M"))*60
-    activpal.data$DayTime<-activpal.data$DayTime+as.numeric(format(activpal.data$time,"%S"))
-
-    overlay.data$DayTime<-as.numeric(format(overlay.data$time,"%H"))*3600
-    overlay.data$DayTime<-overlay.data$DayTime+as.numeric(format(overlay.data$time,"%M"))*60
-    overlay.data$DayTime<-overlay.data$DayTime+as.numeric(format(overlay.data$time,"%S"))
-
-    # Identifiers and colours for chart production.  All categories used to classify activty,
-    overlay_title <- colnames(overlay.data)[3]
-    colnames(overlay.data)[3] <- "group"
-    overlay.data$group <- factor(overlay.data$group)
-
-    # Convert the posixct datetime to a numeric to allow correct spiral production.
-    # This is necessary to allow the correct orientation of the spiral and to allow it to spiral inwards
-    activpal.data$reverse.start<-as.numeric(activpal.data$time)
-    activpal.data$reverse.end<-as.numeric(activpal.data$time+activpal.data$interval)
-    overlay.data$reverse.start<-as.numeric(overlay.data$time)
-    overlay.data$reverse.end<-as.numeric(overlay.data$time+overlay.data$duration)
-
-    activity_colours <- c("#009EE2","#BBFFFF","#FFDF00","#F4858D","#38D305","#7916B1","#FF0000","grey50")
-    overlay_colours <- c("#e41a1c","#377eb8","#4daf4a","#984ea3","#ff7f00","#ffff33","#a65628","#f781bf")
-    overlay_colours <- overlay_colours[c(1:length(levels(overlay.data$group)))]
-
-    colour_categories <- c(overlay_title,levels(overlay.data$group),"Activity",levels(activpal.data$category))
-    colour_values <- c("white",overlay_colours,"white",activity_colours)
-
-    plot.dual.linear(activpal.data, overlay.data, file.name, out.path,colour_categories,colour_values)
-    plot.dual.spiral(activpal.data, overlay.data, file.name, out.path,colour_categories,colour_values)
+  # overlap_data should be of the format start_time / duration / category or start_time / end_time / category
+  if (!match %in% c("single", "both")) {
+    match <- "both"
   }
 
-plot.dual.linear<-
-  function(activpal.data,overlay.data,file.name,out.path.linear,colour_categories,colour_values){
+  # Restrict the activpal.data to the following columns: time,interval,activity,cumulative_steps,steps)
+  activpal.data <- activpal.data[, c(1, 3, 4, 5, 8)]
+  overlay.data <- process.overlay.file(overlay.data)
+
+  if (match == "single") {
+    # calculate the plotting start time and end time to include all activity and overlay data
+    start.time <- min(min(activpal.data$time), min(overlay.data$time))
+    end.time <- max(max((activpal.data$time + activpal.data$interval)), max(overlay.data$time + overlay.data$duration))
+  } else {
+    # calculate the plotting start time and end time to exclude leading / trailing data where the activity data or overlay data is missing
+    start.time <- max(min(activpal.data$time), min(overlay.data$time))
+    end.time <- min(max((activpal.data$time + activpal.data$interval)), max(overlay.data$time + overlay.data$duration))
+  }
+
+  # Caclulate the data.frame indexes where there is both activity and overlay data
+  activpal.start <- max(1, (min(which(activpal.data$time >= start.time)) - 1))
+  activpal.end <- min(max(which(activpal.data$time <= end.time)) + 1, nrow(activpal.data))
+  overlap.start <- max(1, (min(which(overlay.data$time >= start.time)) - 1))
+  overlap.end <- min(max(which(overlay.data$time <= end.time)) + 1, nrow(overlay.data))
+
+  # Restrict the data to exclude data where only one of the stepping / overlay data is available
+  activpal.data <- activpal.data[c(activpal.start:activpal.end), ]
+  overlay.data <- overlay.data[c(overlap.start:overlap.end), ]
+
+  # Categorise the activity and overlay data to allow correct colouring
+  activpal.data <- characterise.activity(activpal.data)
+
+  # Split any measurements that are greater than 5 minutes into 5 minute segments.
+  # This is necessary to allow correct spiral production
+  activpal.data <- split.events.file(activpal.data, 2, 300)
+  overlay.data <- split.overlay(overlay.data, 2, 300)
+
+  # Extract the time of day as the number of seconds following midnight for each of the data files.
+  # This allows correct plotting of the data in regards to the x-axis
+  activpal.data$DayTime <- as.numeric(format(activpal.data$time, "%H")) * 3600
+  activpal.data$DayTime <- activpal.data$DayTime + as.numeric(format(activpal.data$time, "%M")) * 60
+  activpal.data$DayTime <- activpal.data$DayTime + as.numeric(format(activpal.data$time, "%S"))
+
+  overlay.data$DayTime <- as.numeric(format(overlay.data$time, "%H")) * 3600
+  overlay.data$DayTime <- overlay.data$DayTime + as.numeric(format(overlay.data$time, "%M")) * 60
+  overlay.data$DayTime <- overlay.data$DayTime + as.numeric(format(overlay.data$time, "%S"))
+
+  # Identifiers and colours for chart production.  All categories used to classify activty,
+  overlay_title <- colnames(overlay.data)[3]
+  colnames(overlay.data)[3] <- "group"
+  overlay.data$group <- factor(overlay.data$group)
+
+  # Convert the posixct datetime to a numeric to allow correct spiral production.
+  # This is necessary to allow the correct orientation of the spiral and to allow it to spiral inwards
+  activpal.data$reverse.start <- as.numeric(activpal.data$time)
+  activpal.data$reverse.end <- as.numeric(activpal.data$time + activpal.data$interval)
+  overlay.data$reverse.start <- as.numeric(overlay.data$time)
+  overlay.data$reverse.end <- as.numeric(overlay.data$time + overlay.data$duration)
+
+  activity_colours <- c("#009EE2", "#BBFFFF", "#FFDF00", "#F4858D", "#38D305", "#7916B1", "#FF0000", "grey50")
+  overlay_colours <- c("#e41a1c", "#377eb8", "#4daf4a", "#984ea3", "#ff7f00", "#ffff33", "#a65628", "#f781bf")
+  overlay_colours <- overlay_colours[c(1:length(levels(overlay.data$group)))]
+
+  colour_categories <- c(overlay_title, levels(overlay.data$group), "Activity", levels(activpal.data$category))
+  colour_values <- c("white", overlay_colours, "white", activity_colours)
+
+  plot.dual.linear(activpal.data, overlay.data, file.name, out.path, colour_categories, colour_values)
+  plot.dual.spiral(activpal.data, overlay.data, file.name, out.path, colour_categories, colour_values)
+}
+
+plot.dual.linear <- function(activpal.data,
+                             overlay.data,
+                             file.name,
+                             out.path.linear,
+                             colour_categories,
+                             colour_values){
     #' @import ggplot2
     #' @importFrom graphics text
     activpal.data$date <- as.Date(activpal.data$time)
@@ -262,7 +270,10 @@ plot.dual.linear<-
     }
 
     # Outputs the spiral chart to a png file
-    ggplot2::ggsave(paste(out.path.linear,file.name,"_linear.png",sep=""), plot = spiral, height = 8, width = 15)
+    ggplot2::ggsave(paste(out.path.linear,file.name,"_linear.png",sep=""),
+                    ## Randy add create dir. to be true ------------------------
+                    create.dir = TRUE,
+                    plot = spiral, height = 8, width = 15)
   }
 
 plot.dual.spiral<-
@@ -331,7 +342,14 @@ plot.dual.spiral<-
     }
 
     # Outputs the spiral chart to a png file
-    ggplot2::ggsave(paste(out.path.spiral,file.name,"_spiral.png",sep=""), plot = spiral, height = 10, width = 10)
+    ggplot2::ggsave(paste(out.path.spiral,
+                          file.name,
+                          "_spiral.png",
+                          sep = ""),
+                    plot = spiral,
+                    create.dir = TRUE,
+                    height = 10,
+                    width = 10)
   }
 
 characterise.activity<-

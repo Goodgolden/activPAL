@@ -19,6 +19,7 @@
 
 fun_call <- function(f) {
 
+  library(codetools)
   leaf <- function (e, w) {
     r <- try(eval(e), silent = TRUE)
     if(!is.null(r) && is.function(r)) ret <<- c(ret, as.character(e))
@@ -175,6 +176,13 @@ activpal.process.folder.windows <-
 
           #         all_summary[[i]] <- stepping_summary
           current_batched_ids <- c(current_batched_ids, id)
+
+          # Tue Mar 19 16:55:36 2024 ------------------------------
+          ## in macbook we have to created the folder first
+          ## then add the files into the folder
+          dir.create(paste(Temp_Output_folder_location,
+                           id,
+                           sep = ""), showWarnings = FALSE)
 
           write.table(stepping_summary, file = paste(Temp_Output_folder_location,
                                                      id, "\\", id,
@@ -1053,6 +1061,7 @@ make.index.file.macbook <-
 #' @export
 individual.chart.overlay.macbook <-
   function(Temp_Output_folder_location) {
+    # browser()
     last.batched.ids <- read.csv(paste(Temp_Output_folder_location,
                                        "Last_Batched_Ids.csv",
                                        sep = ""), ",",

@@ -40,6 +40,9 @@ list.files(Events_Files_To_Process_folder_location)
 ## Run the code
 
 ```{r "run_code"}
+#| warning: false
+#| error: true
+
 activpal.process.folder.macbook(Events_Files_To_Process_folder_location,
                                 Temp_Output_folder_location)
 

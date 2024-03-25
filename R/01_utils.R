@@ -46,7 +46,7 @@ fun_call <- function(f) {
 #' @param Temp_Output_folder_location
 #'
 #' @return current_batched_ids
-
+#' @export
 activpal.process.folder.windows <-
   function(Events_Files_To_Process_folder_location,
            Temp_Output_folder_location) {
@@ -1111,8 +1111,6 @@ individual.chart.overlay.windows <-
 #'
 #' @return
 #' @export
-#'
-#' @examples
 apSummary.windows <- function(Events_Files_To_Process_folder_location,
                               Confirmed_Output_folder_location) {
   file_names <- list.files(Events_Files_To_Process_folder_location,

@@ -7,14 +7,9 @@ writeLines('PATH="${RTOOLS40_HOME}\\usr\\bin;${PATH}"',
 
 install.packages("devtools", dependencies = TRUE)
 
-
-library(devtools)
-library(Rcpp)
-library(dplyr)
-
 devtools::install_github("Goodgolden/activPAL_v0.3.0",
                          dependencies = TRUE,
-                         upgrade = "never",
+                         upgrade = "always",
                          force = TRUE)
 
 'force = TRUE'

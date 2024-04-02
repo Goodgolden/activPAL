@@ -7,12 +7,15 @@ options(warn = -1)
 library(activPAL)
 'force = TRUE'
 
+## be careful about the directory setup
+## it depends on how you name the folders and
+## where you started mapping the folders
 dir <- ("/Volumes/IMSLAB/IMSL RESEARCH PROJECTS/SPARX III/SPARX III CORE/SPARX DATA ANALYSIS/SPARX ACTIVPAL PROCESSING/AP_Processing_Directory/")
 setwd(dir)
 
 (Events_Files_To_Process_folder_location <- "Events_Files_To_Process/")
 Temp_Output_folder_location <- "Temp_Output/"
-Confirmed_Output_folder_location <- "Confirmed_Output/macbook/"
+Confirmed_Output_folder_location <- "Confirmed_Output/"
 
 
 ### Confirm the folder on Mac

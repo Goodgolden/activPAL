@@ -5,7 +5,9 @@
 library(activPAL)
 'force = TRUE'
 
-
+## be careful about the directory setup
+## it depends on how you name the folders and
+## where you started mapping the folders
 Events_Files_To_Process_folder_location <-
   "S:\\PT\\IMSLAB\\IMSL RESEARCH PROJECTS\\SPARX III\\SPARX III CORE\\SPARX DATA ANALYSIS\\SPARX ACTIVPAL PROCESSING\\AP_Processing_Directory\\Events_Files_To_Process\\"
 

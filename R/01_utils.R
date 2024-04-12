@@ -172,9 +172,9 @@ activpal.process.folder.windows <-
           stepping_summary$ID <- id
 
           stepping_summary$Ex_Start <- as.POSIXlt(stepping_summary$Ex_Start,
-                                                  format = "%Y/%m/%d %H:%M")
+                                                  format = "%Y/%m/%d %H:%M:%S")
           stepping_summary$Ex_End <- as.POSIXlt(stepping_summary$Ex_End,
-                                                format = "%Y/%m/%d %H:%M")
+                                                format = "%Y/%m/%d %H:%M:%S")
           stepping_summary$Date <- as.Date(stepping_summary$Date,
                                            format = "%Y/%m/%d")
           stepping_summary$Ex_Start <- format(stepping_summary$Ex_Start)
@@ -345,9 +345,9 @@ activpal.process.folder.macbook <-
           # Thu Apr 11 23:22:50 2024 ------------------------------
 
           stepping_summary$Ex_Start <- as.POSIXlt(stepping_summary$Ex_Start,
-                                           format = "%Y/%m/%d %H:%M")
+                                           format = "%Y/%m/%d %H:%M:%S")
           stepping_summary$Ex_End <- as.POSIXlt(stepping_summary$Ex_End,
-                                               format = "%Y/%m/%d %H:%M")
+                                               format = "%Y/%m/%d %H:%M:%S")
           stepping_summary$Date <- as.Date(stepping_summary$Date,
                                            format = "%Y/%m/%d")
           stepping_summary$Ex_Start <- format(stepping_summary$Ex_Start)
@@ -1222,8 +1222,8 @@ apSummary.windows <- function(Events_Files_To_Process_folder_location,
       ex.times <- read.csv(paste(Confirmed_Output_folder_location, id, "\\",
                                  id, "_ex_times_confirmed.csv", sep = ""))
 
-      ex.times$Ex_Start <- strptime(ex.times$Ex_Start, format = "%m/%d/%Y %H:%M", tz = "UTC")
-      ex.times$Ex_End <- strptime(ex.times$Ex_End, format = "%m/%d/%Y %H:%M", tz = "UTC")
+      ex.times$Ex_Start <- strptime(ex.times$Ex_Start, format = "%m/%d/%Y %H:%M:%S", tz = "UTC")
+      ex.times$Ex_End <- strptime(ex.times$Ex_End, format = "%m/%d/%Y %H:%M:%S", tz = "UTC")
 
 
       et <- dim(ex.times)[1]
@@ -1399,8 +1399,8 @@ apSummary.macbook <- function(Events_Files_To_Process_folder_location,
       # ex.times$Date <- strptime(ex.times$Date, "%m/%d/%y", tz = "UTC")
       # ex.times$Ex_Start <- paste(ex.times$Date, ex.times$Ex_Start, sep = " ")
 
-      ex.times$Ex_Start <- strptime(ex.times$Ex_Start, format = "%m/%d/%y %H:%M", tz = "UTC")
-      ex.times$Ex_End <- strptime(ex.times$Ex_End, format = "%m/%d/%y %H:%M", tz = "UTC")
+      ex.times$Ex_Start <- strptime(ex.times$Ex_Start, format = "%m/%d/%y %H:%M:%S", tz = "UTC")
+      ex.times$Ex_End <- strptime(ex.times$Ex_End, format = "%m/%d/%y %H:%M:%S", tz = "UTC")
 
       et <- dim(ex.times)[1]
 

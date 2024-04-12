@@ -1143,7 +1143,6 @@ apSummary.windows <- function(Events_Files_To_Process_folder_location,
                            pattern = "*Events.csv",
                            recursive = TRUE)
 
-  browser()
   for (i in file_names) {
     id <- unlist(strsplit(i, "-"))[1]
 

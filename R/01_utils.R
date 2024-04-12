@@ -171,8 +171,15 @@ activpal.process.folder.windows <-
           stepping_summary$Uid_Date <- curr_uid
           stepping_summary$ID <- id
 
+          stepping_summary$Ex_Start <- as.POSIXlt(stepping_summary$Ex_Start,
+                                                  format = "%Y/%m/%d %H:%M")
+          stepping_summary$Ex_End <- as.POSIXlt(stepping_summary$Ex_End,
+                                                format = "%Y/%m/%d %H:%M")
           stepping_summary$Date <- as.Date(stepping_summary$Date,
                                            format = "%Y/%m/%d")
+          stepping_summary$Ex_Start <- format(stepping_summary$Ex_Start)
+          stepping_summary$Ex_End <- format(stepping_summary$Ex_End)
+          stepping_summary$Ex_Date <- format(stepping_summary$Date, usetz = TRUE)
 
           #         all_summary[[i]] <- stepping_summary
           current_batched_ids <- c(current_batched_ids, id)
@@ -246,7 +253,8 @@ activpal.process.folder.macbook <-
       # events_file <- events_file[,-ncol(events_file)]
 
       events_file$Time <- as.POSIXct(as.numeric(events_file$Time) * 86400,
-                                     origin = "1899-12-30", tz = "UTC")
+                                     origin = "1899-12-30",
+                                     tz = "UTC")
 
       valid_day_list <- valid.days(events_file)
       events_file$date <- as.Date(events_file$Time)
@@ -305,8 +313,8 @@ activpal.process.folder.macbook <-
                                   time_value[, (9:12)],
                                   time_value[, (15:18)])
 
-          names(time_value_use) <- c("Date", "Ex_Start",
-                                     "Ex_End", "Num_Steps", "Step_Minutes",
+          names(time_value_use) <- c("Date", "Ex_Start", "Ex_End",
+                                     "Num_Steps", "Step_Minutes",
                                      "Cadence", "Exercise_Log",
                                      "Sed_Start_Marker", "Sed_End_Marker",
                                      "Stand_Start_Marker", "Stand_End_Marker",
@@ -334,8 +342,17 @@ activpal.process.folder.macbook <-
           stepping_summary$Uid_Date <- curr_uid
           stepping_summary$ID <- id
 
+          # Thu Apr 11 23:22:50 2024 ------------------------------
+
+          stepping_summary$Ex_Start <- as.POSIXlt(stepping_summary$Ex_Start,
+                                           format = "%Y/%m/%d %H:%M")
+          stepping_summary$Ex_End <- as.POSIXlt(stepping_summary$Ex_End,
+                                               format = "%Y/%m/%d %H:%M")
           stepping_summary$Date <- as.Date(stepping_summary$Date,
                                            format = "%Y/%m/%d")
+          stepping_summary$Ex_Start <- format(stepping_summary$Ex_Start)
+          stepping_summary$Ex_End <- format(stepping_summary$Ex_End)
+          stepping_summary$Ex_Date <- format(stepping_summary$Date, usetz = TRUE)
 
           #         all_summary[[i]] <- stepping_summary
           current_batched_ids <- c(current_batched_ids, id)
@@ -1126,6 +1143,7 @@ apSummary.windows <- function(Events_Files_To_Process_folder_location,
                            pattern = "*Events.csv",
                            recursive = TRUE)
 
+  browser()
   for (i in file_names) {
     id <- unlist(strsplit(i, "-"))[1]
 
@@ -1134,7 +1152,12 @@ apSummary.windows <- function(Events_Files_To_Process_folder_location,
     ex.times.list <- list.files(Confirmed_Output_folder_location,
                                 pattern = "*_ex_times_confirmed.csv",
                                 recursive = TRUE)
+
+    ## To find the ex_times_confirmed.csv files for the id
+    ## "5179/5179_ex_times_confirmed.csv"
+    ## not very efficient but works
     ex.times.path <- ex.times.list[grep(id, ex.times.list)]
+
 
     if (length(ex.times.path) == 0) {
       print(id)
@@ -1143,10 +1166,13 @@ apSummary.windows <- function(Events_Files_To_Process_folder_location,
 
     if (length(ex.times.path) > 0) {
       events_file <- read.csv(paste(Events_Files_To_Process_folder_location,
-                                    i, sep = ""),
+                                    i,
+                                    sep = ""),
                               row.names = NULL,
                               sep = ",",
                               stringsAsFactors = FALSE)
+      ## reading files form the Events_Files_To_Process_folder_location
+      # View(events_file)
 
       events_file$Time <- as.POSIXct(as.numeric(events_file$Time) * 86400,
                                      origin = "1899-12-30",
@@ -1157,6 +1183,8 @@ apSummary.windows <- function(Events_Files_To_Process_folder_location,
 
       events_file$exercise <- 0
 
+      # View(events_file)
+      # names(events_file)
       colnames(events_file)[4] <- "Event.Type"
       colnames(events_file)[3] <- "Duration..s."
 
@@ -1197,6 +1225,7 @@ apSummary.windows <- function(Events_Files_To_Process_folder_location,
 
       ex.times$Ex_Start <- strptime(ex.times$Ex_Start, format = "%m/%d/%Y %H:%M", tz = "UTC")
       ex.times$Ex_End <- strptime(ex.times$Ex_End, format = "%m/%d/%Y %H:%M", tz = "UTC")
+
 
       et <- dim(ex.times)[1]
 
@@ -1240,7 +1269,7 @@ apSummary.windows <- function(Events_Files_To_Process_folder_location,
         temp.day <- events_file[which(events_file$date == d), ]
 
         td <- dim(temp.day)[1]
-        temp.day.ex <- temp.day[which(temp.day$exercise == 1), ]
+        (temp.day.ex <- temp.day[which(temp.day$exercise == 1), ])
         tde <- dim(temp.day.ex)[1]
 
         tot.steps <- sum(temp.day$Num.Steps[which(temp.day$Event.Type == 2)]) * 2
@@ -1296,6 +1325,7 @@ apSummary.macbook <- function(Events_Files_To_Process_folder_location,
                            recursive = TRUE)
 
   for (i in file_names) {
+    # i = file_names[1]
     id <- unlist(strsplit(i, "-"))[1]
 
     print(id)
@@ -1344,7 +1374,8 @@ apSummary.macbook <- function(Events_Files_To_Process_folder_location,
       cross.days <- which(events_file$diff > 0)
       events_file <- rbind(events_file, events_file[cross.days, ])
       events_file[cross.days, ]$Duration..s. <-
-        round(events_file[cross.days, ]$Duration..s. - events_file[cross.days, ]$diff, 1)
+        round(events_file[cross.days, ]$Duration..s. -
+                events_file[cross.days, ]$diff, 1)
       events_file[(nrow(events_file) - length(cross.days) + 1):nrow(events_file), ]$Duration..s. <-
         round(events_file[(nrow(events_file) - length(cross.days) + 1):nrow(events_file), ]$diff, 1)
       events_file[(nrow(events_file) - length(cross.days) + 1):nrow(events_file), ]$Time <-
@@ -1366,8 +1397,11 @@ apSummary.macbook <- function(Events_Files_To_Process_folder_location,
                                  id, "_ex_times_confirmed.csv",
                                  sep = ""))
 
-      ex.times$Ex_Start <- strptime(ex.times$Ex_Start, format = "%m/%d/%Y %H:%M", tz = "UTC")
-      ex.times$Ex_End <- strptime(ex.times$Ex_End, format = "%m/%d/%Y %H:%M", tz = "UTC")
+      # ex.times$Date <- strptime(ex.times$Date, "%m/%d/%y", tz = "UTC")
+      # ex.times$Ex_Start <- paste(ex.times$Date, ex.times$Ex_Start, sep = " ")
+
+      ex.times$Ex_Start <- strptime(ex.times$Ex_Start, format = "%m/%d/%y %H:%M", tz = "UTC")
+      ex.times$Ex_End <- strptime(ex.times$Ex_End, format = "%m/%d/%y %H:%M", tz = "UTC")
 
       et <- dim(ex.times)[1]
 
@@ -1382,7 +1416,7 @@ apSummary.macbook <- function(Events_Files_To_Process_folder_location,
         events_file$exercise[which(events_file$Time >= start & events_file$Time < end)] <- 1
       }
 
-      n <- dim(events_file)[1]
+      (n <- dim(events_file)[1])
 
       for (f in (1:(n - 1))) {
         temp.num.steps <- events_file$CumulativeStepCount[f + 1] -
@@ -1409,6 +1443,7 @@ apSummary.macbook <- function(Events_Files_To_Process_folder_location,
 
       for (d in dates) {
         temp.day <- events_file[which(events_file$date == d), ]
+        # View(temp.day)
 
         td <- dim(temp.day)[1]
         temp.day.ex <- temp.day[which(temp.day$exercise == 1), ]
@@ -1418,18 +1453,35 @@ apSummary.macbook <- function(Events_Files_To_Process_folder_location,
         ex.steps <- sum(temp.day.ex$Num.Steps[which(temp.day.ex$Event.Type == 2)]) * 2
         ex.step.mins <- sum(temp.day.ex$Duration..s.[which(temp.day.ex$Event.Type == 2)]) / 60
         stand.min <- sum(temp.day$Duration..s.[which(temp.day$Event.Type == 1)]) / 60
-        sed.min <- sum(temp.day$Duration..s.[which(temp.day$Event.Type == 0 | temp.day$Event.Type == 5)]) / 60
+        sed.min <- sum(temp.day$Duration..s.[which(temp.day$Event.Type == 0 |
+                                                     temp.day$Event.Type == 5)]) / 60
         tot.step.min <- sum(temp.day$Duration..s.[which(temp.day$Event.Type == 2)]) / 60
         tot.min <- (sum(temp.day$Duration..s.[which(temp.day$Event.Type != 4)]) / 60)
         tot.cycling.min <- sum(temp.day$Duration..s.[which(temp.day$Event.Type == 2.1)]) / 60
 
-        wake.min <- sum(temp.day$Duration..s.[which(temp.day$Event.Type != 3.1 & temp.day$Event.Type != 3.2 & temp.day$Event.Type != 4.0)]) / 60
-        sleep.min <- sum(temp.day$Duration..s.[which(temp.day$Event.Type == 3.1 | temp.day$Event.Type == 3.2)]) / 60
+        wake.min <- sum(temp.day$Duration..s.[which(temp.day$Event.Type != 3.1 &
+                                                      temp.day$Event.Type != 3.2 &
+                                                      temp.day$Event.Type != 4.0)]) / 60
+        sleep.min <- sum(temp.day$Duration..s.[which(temp.day$Event.Type == 3.1 |
+                                                       temp.day$Event.Type == 3.2)]) / 60
 
         non.ex.step.min <- tot.step.min - ex.step.mins
         non.ex.num.step <- tot.steps - ex.steps
 
-        temp.summary <- data.frame("Participant ID" = id, "Day" = date.counter, "Date Worn" = unique(temp.day$date), "Total Steps" = tot.steps, "Exercise Steps" = ex.steps, "Steps w/o Exercise" = non.ex.num.step, "Sleep (min)" = sleep.min, "Wake (min)" = wake.min, "Time Standing (min)" = stand.min, "Time Walking (min)" = tot.step.min, "Time Sedentary (min)" = sed.min, "Total Time (min)" = tot.min, "Total Other (min)" = tot.cycling.min, check.names = FALSE)
+        temp.summary <- data.frame("Participant ID" = id,
+                                   "Day" = date.counter,
+                                   "Date Worn" = unique(temp.day$date),
+                                   "Total Steps" = tot.steps,
+                                   "Exercise Steps" = ex.steps,
+                                   "Steps w/o Exercise" = non.ex.num.step,
+                                   "Sleep (min)" = sleep.min,
+                                   "Wake (min)" = wake.min,
+                                   "Time Standing (min)" = stand.min,
+                                   "Time Walking (min)" = tot.step.min,
+                                   "Time Sedentary (min)" = sed.min,
+                                   "Total Time (min)" = tot.min,
+                                   "Total Other (min)" = tot.cycling.min,
+                                   check.names = FALSE)
 
         if (date.counter == 1) {
           summary <- temp.summary
@@ -1440,12 +1492,14 @@ apSummary.macbook <- function(Events_Files_To_Process_folder_location,
 
         date.counter <- date.counter + 1
       }
-      write.table(summary, file = paste(Confirmed_Output_folder_location,
-                                        # Wed Mar 20 10:29:24 2024 -------------
-                                        ## change the separator to / for mac----
-                                        id, "/", id,
-                                        "_summary_confirmed.csv",
-                                        sep = ""),
+
+      write.table(summary,
+                  file = paste(Confirmed_Output_folder_location,
+                               # Wed Mar 20 10:29:24 2024 -------------
+                               ## change the separator to / for mac----
+                               id, "/", id,
+                               "_summary_confirmed.csv",
+                               sep = ""),
                   row.names = FALSE,
                   sep = ",")
     }

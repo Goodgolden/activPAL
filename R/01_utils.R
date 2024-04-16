@@ -1108,7 +1108,7 @@ apSummary.macbook <- function(Events_Files_To_Process_folder_location,
         start <- ex.times$Ex_Start[e]
         end <- ex.times$Ex_End[e]
 
-        events_file$exercise[which(events_file$Time >= start & events_file$Time < end)] <- 1
+        events_file$exercise[which(events_file$Time >= start & events_file$Time <= end)] <- 1
       }
 
       (n <- dim(events_file)[1])

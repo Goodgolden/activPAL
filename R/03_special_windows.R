@@ -181,13 +181,13 @@ activpal.process.folder.windows <-
                            id,
                            sep = ""), showWarnings = FALSE)
 
-          write.table(stepping_summary1,
-                      file = paste(Confirmed_Output_folder_location,
-                                   id, "\\", id,
-                                   "_ex_times_confirmed.csv",
-                                   sep = ""),
-                      sep = ",",
-                      row.names = FALSE)
+          # write.table(stepping_summary1,
+          #             file = paste(Confirmed_Output_folder_location,
+          #                          id, "\\", id,
+          #                          "_ex_times_confirmed.csv",
+          #                          sep = ""),
+          #             sep = ",",
+          #             row.names = FALSE)
           writexl::write_xlsx(stepping_summary1,
                               paste(Confirmed_Output_folder_location,
                                     id, "\\",

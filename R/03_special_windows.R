@@ -156,15 +156,15 @@ activpal.process.folder.windows <-
                                     id,
                                     "_ex_times_temp.xlsx",
                                     sep = ""))
-
-          write.table(stepping_summary,
-                      file = paste(Temp_Output_folder_location,
-                                   id, "\\",
-                                   id,
-                                   "_ex_times_temp.csv",
-                                   sep = ""),
-                      sep = ",",
-                      row.names = FALSE)
+#
+#           write.table(stepping_summary,
+#                       file = paste(Temp_Output_folder_location,
+#                                    id, "\\",
+#                                    id,
+#                                    "_ex_times_temp.csv",
+#                                    sep = ""),
+#                       sep = ",",
+#                       row.names = FALSE)
 
           write.table(current_batched_ids,
                       file = paste(Temp_Output_folder_location,

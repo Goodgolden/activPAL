@@ -6,7 +6,8 @@
 \usage{
 activpal.process.folder.macbook(
   Events_Files_To_Process_folder_location,
-  Temp_Output_folder_location
+  Temp_Output_folder_location,
+  Confirmed_Output_folder_location
 )
 }
 \arguments{

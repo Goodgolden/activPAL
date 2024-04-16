@@ -19,6 +19,8 @@ LazyData: true
 LinkingTo: Rcpp
 Imports:
     ggplot2,
+    writexl,
+    readxl,
     readr,
     tidyr,
     lubridate,

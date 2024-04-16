@@ -5,6 +5,7 @@ op <- getOption("warn")
 options(warn = -1)
 
 library(activPAL)
+library(tidyverse)
 'force = TRUE'
 
 ## be careful about the directory setup
@@ -28,11 +29,13 @@ list.files(Confirmed_Output_folder_location)
 
 
 ### Run the following code to process the data
-activpal.process.folder.macbook(Events_Files_To_Process_folder_location,
-                                Temp_Output_folder_location)
+# activpal.process.folder.macbook(Events_Files_To_Process_folder_location,
+#                                 Temp_Output_folder_location,
+#                                 Confirmed_Output_folder_location)
 
 Last_Batched_Ids <- activpal.process.folder.macbook(Events_Files_To_Process_folder_location,
-                                                    Temp_Output_folder_location)
+                                                    Temp_Output_folder_location,
+                                                    Confirmed_Output_folder_location)
 
 prepare.ex.times.macbook(Temp_Output_folder_location)
 

@@ -50,7 +50,8 @@ fun_call <- function(f) {
 #' @export
 activpal.process.folder.windows <-
   function(Events_Files_To_Process_folder_location,
-           Temp_Output_folder_location) {
+           Temp_Output_folder_location,
+           Confirmed_Output_folder_location) {
 
     # Assumes that the name of the events files contain
     # the text Events in the file name
@@ -189,17 +190,39 @@ activpal.process.folder.windows <-
           ## then add the files into the folder
           dir.create(paste(Temp_Output_folder_location,
                            id,
-                           sep = ""), showWarnings = FALSE)
+                           sep = ""),
+                     showWarnings = FALSE)
 
-          write.table(stepping_summary, file = paste(Temp_Output_folder_location,
-                                                     id, "\\", id,
-                                                     "_ex_times_temp.csv",
-                                                     sep = ""), sep = ",",
+          write.table(stepping_summary,
+                      file = paste(Temp_Output_folder_location,
+                                   id, "\\",
+                                   id,
+                                   "_ex_times_temp.csv",
+                                   sep = ""),
+                      sep = ",",
                       row.names = FALSE)
           write.table(current_batched_ids,
                       file = paste(Temp_Output_folder_location,
-                                   "Last_Batched_Ids.csv", sep = ""),
-                      sep = ",", row.names = FALSE)
+                                   "Last_Batched_Ids.csv",
+                                   sep = ""),
+                      sep = ",",
+                      row.names = FALSE)
+
+          stepping_summary1 <- filter(stepping_summary,
+                                      !is.na(Exercise_Log),
+                                      Exercise_Log != 0)
+
+          dir.create(paste(Confirmed_Output_folder_location,
+                           id,
+                           sep = ""), showWarnings = FALSE)
+
+          write.table(stepping_summary1,
+                      file = paste(Confirmed_Output_folder_location,
+                                   id, "\\", id,
+                                   "_ex_times_confirmed.csv",
+                                   sep = ""),
+                      sep = ",",
+                      row.names = FALSE)
         }
       }
     }
@@ -218,7 +241,8 @@ activpal.process.folder.windows <-
 #' @export
 activpal.process.folder.macbook <-
   function(Events_Files_To_Process_folder_location,
-           Temp_Output_folder_location) {
+           Temp_Output_folder_location,
+           Confirmed_Output_folder_location) {
 
     # Assumes that the name of the events files contain
     # the text Events in the file name
@@ -248,6 +272,7 @@ activpal.process.folder.macbook <-
                               row.names = NULL,
                               sep = ",",
                               stringsAsFactors = FALSE)
+      # View(events_file)
       # head(events_file)
       # colnames(events_file) <- c(tail(colnames(events_file),-1),"")
       # events_file <- events_file[,-ncol(events_file)]
@@ -350,11 +375,11 @@ activpal.process.folder.macbook <-
                                                format = "%Y/%m/%d %H:%M:%S")
           stepping_summary$Date <- as.Date(stepping_summary$Date,
                                            format = "%Y/%m/%d")
+
           stepping_summary$Ex_Start <- format(stepping_summary$Ex_Start)
           stepping_summary$Ex_End <- format(stepping_summary$Ex_End)
           stepping_summary$Ex_Date <- format(stepping_summary$Date, usetz = TRUE)
 
-          #         all_summary[[i]] <- stepping_summary
           current_batched_ids <- c(current_batched_ids, id)
 
           # Tue Mar 19 16:55:36 2024 ------------------------------
@@ -364,18 +389,41 @@ activpal.process.folder.macbook <-
                            id,
                            sep = ""), showWarnings = FALSE)
 
-          write.csv(stepping_summary,
+          write.table(stepping_summary,
                       file = paste(Temp_Output_folder_location,
                                    id, "/", id,
                                    "_ex_times_temp.csv",
                                    sep = ""),
-                      # sep = ",",
+                      sep = ",",
                       row.names = FALSE)
           write.table(current_batched_ids,
                       file = paste(Temp_Output_folder_location,
                                    "Last_Batched_Ids.csv", sep = ""),
                       # sep = ",",
                       row.names = FALSE)
+
+          # Thu Apr 11 23:22:50 2024 ------------------------------
+          # Copy the files to the confirmed output folder
+
+          stepping_summary1 <- filter(stepping_summary,
+                                      !is.na(Exercise_Log),
+                                      Exercise_Log != 0)
+
+          if (nrow(stepping_summary1) > 0) {
+            dir.create(paste(Confirmed_Output_folder_location,
+                             id,
+                             sep = ""), showWarnings = FALSE)
+            write.table(stepping_summary1,
+                        file = paste(Confirmed_Output_folder_location,
+                                     id, "/", id,
+                                     "_ex_times_confirmed.csv",
+                                     sep = ""),
+                        sep = ",",
+                        row.names = FALSE)
+          } else {
+            message(paste("No confirmed ex-values for ", id))
+          }
+
         }
       }
     }
@@ -1222,8 +1270,8 @@ apSummary.windows <- function(Events_Files_To_Process_folder_location,
       ex.times <- read.csv(paste(Confirmed_Output_folder_location, id, "\\",
                                  id, "_ex_times_confirmed.csv", sep = ""))
 
-      ex.times$Ex_Start <- strptime(ex.times$Ex_Start, format = "%m/%d/%Y %H:%M:%S", tz = "UTC")
-      ex.times$Ex_End <- strptime(ex.times$Ex_End, format = "%m/%d/%Y %H:%M:%S", tz = "UTC")
+      ex.times$Ex_Start <- strptime(ex.times$Ex_Start, format = "%m/%d/%Y %H:%M", tz = "UTC")
+      ex.times$Ex_End <- strptime(ex.times$Ex_End, format = "%m/%d/%Y %H:%M", tz = "UTC")
 
 
       et <- dim(ex.times)[1]
@@ -1323,6 +1371,7 @@ apSummary.macbook <- function(Events_Files_To_Process_folder_location,
                            pattern = "*Events.csv",
                            recursive = TRUE)
 
+# browser()
   for (i in file_names) {
     # i = file_names[1]
     id <- unlist(strsplit(i, "-"))[1]
@@ -1398,17 +1447,18 @@ apSummary.macbook <- function(Events_Files_To_Process_folder_location,
 
       # ex.times$Date <- strptime(ex.times$Date, "%m/%d/%y", tz = "UTC")
       # ex.times$Ex_Start <- paste(ex.times$Date, ex.times$Ex_Start, sep = " ")
-
-      ex.times$Ex_Start <- strptime(ex.times$Ex_Start, format = "%m/%d/%y %H:%M:%S", tz = "UTC")
-      ex.times$Ex_End <- strptime(ex.times$Ex_End, format = "%m/%d/%y %H:%M:%S", tz = "UTC")
+#
+      ex.times$Ex_Start <- as.POSIXct(ex.times$Ex_Start, tz = "UTC")
+      ex.times$Ex_End <- as.POSIXct(ex.times$Ex_End, tz = "UTC")
 
       et <- dim(ex.times)[1]
 
-      # 	e <- 1
+      #
       # 	head(events_file)
       # 	unique(events_file$exercise)
 
       for (e in (1:et)) {
+
         start <- ex.times$Ex_Start[e]
         end <- ex.times$Ex_End[e]
 

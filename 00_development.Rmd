@@ -50,6 +50,7 @@ use_package("ggplot2", type = "Import", min_version = "3.4.0")
 
 ```{r}
 ## document the description
+load_all()
 document()
 ## always check 
 ## it's good to establish the habit of checking this often.

@@ -1270,8 +1270,8 @@ apSummary.windows <- function(Events_Files_To_Process_folder_location,
       ex.times <- read.csv(paste(Confirmed_Output_folder_location, id, "\\",
                                  id, "_ex_times_confirmed.csv", sep = ""))
 
-      ex.times$Ex_Start <- strptime(ex.times$Ex_Start, format = "%m/%d/%Y %H:%M", tz = "UTC")
-      ex.times$Ex_End <- strptime(ex.times$Ex_End, format = "%m/%d/%Y %H:%M", tz = "UTC")
+      ex.times$Ex_Start <- strptime(ex.times$Ex_Start, format = "%m/%d/%Y %H:%M:%S", tz = "UTC")
+      ex.times$Ex_End <- strptime(ex.times$Ex_End, format = "%m/%d/%Y %H:%M:%S", tz = "UTC")
 
 
       et <- dim(ex.times)[1]

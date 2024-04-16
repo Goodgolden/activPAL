@@ -315,7 +315,10 @@ apSummary.windows <- function(Events_Files_To_Process_folder_location,
         start <- ex.times$Ex_Start[e]
         end <- ex.times$Ex_End[e]
 
-        events_file$exercise[which(events_file$Time >= start & events_file$Time < end)] <- 1
+        # Tue Apr 16 13:19:50 2024 ------------------------------
+        ## Here is another problem with the old codes
+        ## the < = end is not correct
+        events_file$exercise[which(events_file$Time >= start & events_file$Time <= end)] <- 1
       }
 
       n <- dim(events_file)[1]

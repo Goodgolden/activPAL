@@ -216,7 +216,6 @@ apSummary.windows <- function(Events_Files_To_Process_folder_location,
                            pattern = "*Events.csv",
                            recursive = TRUE)
 
-
   for (i in file_names) {
     id <- unlist(strsplit(i, "-"))[1]
 
@@ -302,8 +301,8 @@ apSummary.windows <- function(Events_Files_To_Process_folder_location,
       ex.times <- readxl::read_excel(paste(Confirmed_Output_folder_location, id, "\\",
                                            id, "_ex_times_confirmed.xlsx", sep = ""))
 
-      ex.times$Ex_Start <- strptime(ex.times$Ex_Start, format = "%m/%d/%Y %H:%M:%S", tz = "UTC")
-      ex.times$Ex_End <- strptime(ex.times$Ex_End, format = "%m/%d/%Y %H:%M:%S", tz = "UTC")
+      ex.times$Ex_Start <- strptime(ex.times$Ex_Start, format = "%Y-%m-%d %H:%M:%S", tz = "UTC")
+      ex.times$Ex_End <- strptime(ex.times$Ex_End, format = "%Y-%m-%d %H:%M:%S", tz = "UTC")
 
 
       et <- dim(ex.times)[1]
